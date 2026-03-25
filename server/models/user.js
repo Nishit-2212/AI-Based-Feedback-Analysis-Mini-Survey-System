@@ -30,15 +30,12 @@ const userSchema = new mongoose.Schema({
     },
     age: {
         type: Number,
-        required: true
     },
     gender: {
         type: String,
-        required: true
     },
     higherQualification: {
         type: String,
-        required: true
     }
 }, { timestamps: true})
 
@@ -51,6 +48,9 @@ User.signUp = async(data) => {
     return await commanDb.signUp(User,data);
 }
 
+User.googleLogin = async(data) => {
+    return await commanDb.googleLogin(User,data);
+}
 
 
 module.exports = User;

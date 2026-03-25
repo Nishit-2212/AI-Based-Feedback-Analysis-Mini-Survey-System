@@ -15,7 +15,8 @@ const PORT = process.env.PORT;
 const app = express();
 connectDB();
 
-app.use(cors())
+app.use(cors());
+app.use(express.json()); // Crucial for parsing { code: "..." } from Angular
 
 
 app.use('/api/auth',authRoutes);

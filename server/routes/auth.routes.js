@@ -9,6 +9,8 @@ const route = express.Router();
 
 route.post('/user/sign-up',authController.userSignup);
 
+route.post('/google',authController.googleLogin);
+
 // route.post('/company/login');
 
 // route.post('/company/sign-up');
