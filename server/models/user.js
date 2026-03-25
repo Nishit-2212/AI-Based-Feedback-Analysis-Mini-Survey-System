@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const commanDb = require('../comman/commandb.js')
 
 const userSchema = new mongoose.Schema({
     userId: {
@@ -36,4 +37,15 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true})
 
-module.exports = mongoose.model("user",userSchema);
+
+
+const User = mongoose.model("User",userSchema);
+
+
+User.signUp = async(data) => {
+    return await commanDb.signUp(User,data);
+}
+
+
+
+module.exports = User;
