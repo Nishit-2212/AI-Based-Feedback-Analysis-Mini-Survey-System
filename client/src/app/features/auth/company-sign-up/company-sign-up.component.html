@@ -1,0 +1,96 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Register your Company</h2>
+    <p>Create a company workspace to gather feedback and AI insights.</p>
+
+    <form (ngSubmit)="onSubmit()" #signUpForm="ngForm">
+      <div class="form-group">
+        <label for="yourName">Your Name</label>
+        <input 
+          type="text" 
+          id="yourName" 
+          name="yourName" 
+          class="form-control" 
+          placeholder="E.g. John Doe"
+          [(ngModel)]="signUpData.yourName"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="companyName">Company Name</label>
+        <input 
+          type="text" 
+          id="companyName" 
+          name="companyName" 
+          class="form-control" 
+          placeholder="E.g. Acme Corp"
+          [(ngModel)]="signUpData.companyName"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="companyEmail">Company Email</label>
+        <input 
+          type="email" 
+          id="companyEmail" 
+          name="companyEmail" 
+          class="form-control" 
+          placeholder="admin@company.com"
+          [(ngModel)]="signUpData.companyEmail"
+          required
+        >
+      </div>
+
+      <div class="form-group" style="display: flex; gap: 16px;">
+        <div style="flex: 1;">
+          <label for="country">Country</label>
+          <input 
+            type="text" 
+            id="country" 
+            name="country" 
+            class="form-control" 
+            placeholder="E.g. United States"
+            [(ngModel)]="signUpData.country"
+            required
+          >
+        </div>
+        <div style="flex: 1;">
+          <label for="state">State</label>
+          <input 
+            type="text" 
+            id="state" 
+            name="state" 
+            class="form-control" 
+            placeholder="E.g. California"
+            [(ngModel)]="signUpData.state"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          class="form-control" 
+          placeholder="Create a strong password"
+          [(ngModel)]="signUpData.password"
+          required
+          minlength="6"
+        >
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary login-btn" [disabled]="!signUpForm.valid">Create Workspace</button>
+      </div>
+
+      <div class="auth-footer">
+        Already registered? <a routerLink="/auth/company-login">Sign in</a>
+      </div>
+    </form>
+  </div>
+</div>

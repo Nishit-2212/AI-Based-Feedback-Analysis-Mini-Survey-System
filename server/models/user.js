@@ -4,7 +4,7 @@ const commanDb = require('../comman/commandb.js')
 const userSchema = new mongoose.Schema({
     userId: {
         type:Number,
-        required:true
+        
     },
     username: {
         type:String,
@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema({
     email: {
         type:String,
         required:true,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     role: {
         type:String,
@@ -21,7 +22,11 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+    },
+    provider: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local'
     },
     age: {
         type: Number,

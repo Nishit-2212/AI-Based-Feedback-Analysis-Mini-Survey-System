@@ -1,0 +1,35 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-left">
+      <a routerLink="/" class="logo">PIXLS</a>
+      <ul class="nav-links">
+        <li><a routerLink="/" class="nav-link active">Home</a></li>
+        <li>
+          <a class="nav-link dropdown">
+            Get started 
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </a>
+        </li>
+        <li><a routerLink="/about" class="nav-link">About</a></li>
+        <li><a routerLink="/forum" class="nav-link">Forum</a></li>
+      </ul>
+    </div>
+
+    <div class="navbar-center">
+      <div class="search-bar">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Try 'Lotus GT 430'" />
+      </div>
+    </div>
+
+    <div class="navbar-right" style="gap: 12px;">
+      <button class="btn-primary" routerLink="/auth/login">Login</button>
+      <button class="btn-secondary" routerLink="/auth/register-company">Register Company</button>
+    </div>
+  </div>
+</nav>
