@@ -1,0 +1,73 @@
+<div class="survey-builder-container">
+  <div class="header">
+    <h1>Create New Survey</h1>
+    <button class="btn-primary main-submit" (click)="onSubmit()">Submit Survey</button>
+  </div>
+
+  <form [formGroup]="surveyForm" class="builder-layout">
+    
+    <!-- Left Column: Survey Details & Questions list -->
+    <div class="main-column">
+      
+      <!-- Survey Details Card -->
+      <div class="card details-card">
+        <h2>Survey Details</h2>
+        <div class="form-group">
+          <label>Survey Title</label>
+          <input type="text" formControlName="title" placeholder="e.g., Q3 Company Feedback" class="input-field">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea formControlName="description" placeholder="Briefly describe what this survey is mapping..." class="input-field textarea-field"></textarea>
+        </div>
+      </div>
+
+      <!-- Questions Dynamic Form Array -->
+      <div formArrayName="questions" class="questions-list">
+        <div *ngFor="let q of questions.controls; let i=index" [formGroupName]="i" class="card question-card">
+          <div class="question-header">
+            <h3>Question {{ i + 1 }} <span class="badge">{{ q.get('type')?.value }}</span></h3>
+            <button class="btn-icon danger" (click)="removeQuestion(i)" title="Delete Question">🗑</button>
+          </div>
+          
+          <input type="text" formControlName="text" placeholder="Type your question prompt here..." class="input-field question-title-input">
+
+          <!-- Options mapping (for MCQ and Multiple Choice) -->
+          <div *ngIf="q.get('type')?.value !== 'Open Ended'" formArrayName="options" class="options-container">
+            <div *ngFor="let opt of getOptions(i).controls; let j=index" [formGroupName]="j" class="option-row">
+              <span class="option-marker">{{ q.get('type')?.value === 'MCQ (Single Choice)' ? '○' : '☐' }}</span>
+              <input type="text" formControlName="value" placeholder="Option {{j + 1}}" class="input-field option-input">
+              <button class="btn-icon outline" (click)="removeOption(i, j)" *ngIf="getOptions(i).length > 1">✕</button>
+            </div>
+            <button type="button" class="btn-text" (click)="addOption(i)">+ Add Option</button>
+          </div>
+
+          <!-- Open Ended Preview -->
+          <div *ngIf="q.get('type')?.value === 'Open Ended'" class="open-ended-preview">
+            <textarea disabled placeholder="Respondents will type out a long-form answer here..." class="input-field textarea-field preview"></textarea>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Sidebar Element Actions -->
+    <div class="side-column">
+      <div class="card sticky-actions">
+        <h3>+ Add Question</h3>
+        <p class="action-desc">Click an element to drop it into your timeline natively.</p>
+        <button type="button" class="btn-action-pill" (click)="addQuestion('Open Ended')">
+          <i class="icon">📝</i> Open Ended Text
+        </button>
+        <button type="button" class="btn-action-pill" (click)="addQuestion('MCQ (Single Choice)')">
+          <i class="icon">◉</i> MCQ Single Choice
+        </button>
+        <button type="button" class="btn-action-pill" (click)="addQuestion('Multiple Choice (Checkboxes)')">
+          <i class="icon">☑</i> Multiple Choice
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>

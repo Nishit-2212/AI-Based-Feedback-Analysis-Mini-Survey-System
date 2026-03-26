@@ -1,0 +1,158 @@
+.sidebar {
+  width: 260px;
+  background-color: #F6F7F9; /* Very light gray identical to screenshot */
+  border-right: 1px solid #E5E5EA;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  font-family: inherit;
+  z-index: 1000;
+  transition: width 0.3s ease, transform 0.3s ease, padding 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+  padding: 24px 12px;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  padding: 0;
+}
+
+.menu-icon {
+  font-style: normal;
+  font-size: 22px;
+  cursor: pointer;
+  color: #1C1C1E;
+}
+
+.brand-logo {
+  font-weight: 700;
+  font-size: 18px;
+  color: #1C1C1E;
+  letter-spacing: -0.5px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  background-color: #FFFFFF;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  cursor: pointer;
+  gap: 12px;
+}
+
+.avatar img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 13px;
+  color: #1C1C1E;
+}
+
+.dropdown-icon {
+  font-style: normal;
+  color: #8E8E93;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  color: #4C4C50;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.nav-item .icon {
+  font-style: normal;
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  color: #4C4C50;
+}
+
+.nav-item:hover {
+  background-color: #ECEAED;
+}
+
+.nav-item.active {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.nav-item.active .icon {
+  color: #FFFFFF;
+}
+
+.nav-divider {
+  height: 1px;
+  background-color: #E2E2E5;
+  margin: 12px 16px;
+}
+
+/* Collapsed Architecture Styles */
+.user-profile.compact {
+  padding: 8px;
+  justify-content: center;
+  background-color: transparent;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.sidebar.collapsed .nav-item {
+  padding: 10px;
+  justify-content: center;
+}
+
+.sidebar.collapsed .nav-item .icon {
+  margin: 0;
+  font-size: 20px;
+}

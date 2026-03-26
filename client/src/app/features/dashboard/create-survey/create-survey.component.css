@@ -1,0 +1,260 @@
+.survey-builder-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1C1C1E;
+}
+
+.builder-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.main-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.side-column {
+  width: 300px;
+  position: sticky;
+  top: 24px;
+}
+
+.card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #E5E5EA;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+}
+
+.details-card h2 {
+  font-size: 18px;
+  margin-bottom: 24px;
+  color: #1C1C1E;
+  font-weight: 800;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 700;
+  font-size: 13px;
+  color: #4C4C50;
+  text-transform: uppercase;
+}
+
+.input-field {
+  padding: 14px 16px;
+  border: 1px solid #E5E5EA;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #FAFAFA;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #1C1C1E;
+  background-color: #FFFFFF;
+}
+
+.input-field.ng-invalid.ng-touched {
+  border-color: #FF3B30;
+}
+
+.textarea-field {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.question-card {
+  border-left: 4px solid #1C1C1E;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.question-header h3 {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.badge {
+  font-size: 11px;
+  background: #F6F7F9;
+  border: 1px solid #E5E5EA;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: #4C4C50;
+  font-weight: 600;
+}
+
+.question-title-input {
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.option-marker {
+  color: #8E8E93;
+  font-size: 20px;
+  width: 20px;
+  text-align: center;
+}
+
+.option-input {
+  flex: 1;
+}
+
+.main-submit {
+  font-size: 14px !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-color, #CCFF90);
+  color: #1C1C1E;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 6px;
+  padding: 6px 10px;
+  transition: background 0.2s;
+  font-weight: bold;
+}
+
+.btn-icon.danger { color: #FF3B30; }
+.btn-icon.danger:hover { background: #FFEEEE; }
+
+.btn-icon.outline { border: 1px solid #E5E5EA; color: #8E8E93; }
+.btn-icon.outline:hover { background: #F0F0F0; border-color: #8E8E93; color: #1C1C1E; }
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: #1C1C1E;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-left: 32px;
+  font-size: 13px;
+}
+
+.btn-text:hover {
+  text-decoration: underline;
+}
+
+.sticky-actions h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.action-desc {
+  font-size: 13px;
+  color: #8E8E93;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.btn-action-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: #FAFAFA;
+  border: 1px solid #E5E5EA;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+  transition: all 0.2s;
+  color: #4C4C50;
+  font-family: inherit;
+}
+
+.btn-action-pill i {
+  font-size: 18px;
+  color: #1C1C1E;
+}
+
+.btn-action-pill:hover {
+  background: #FFFFFF;
+  border-color: #1C1C1E;
+  color: #1C1C1E;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.open-ended-preview {
+  margin-top: 12px;
+}
+.preview {
+  width: 100%;
+  background: #FAFAFA;
+  cursor: not-allowed;
+  border-style: dashed;
+}

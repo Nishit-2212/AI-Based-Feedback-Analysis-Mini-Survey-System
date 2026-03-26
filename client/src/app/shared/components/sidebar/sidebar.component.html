@@ -1,0 +1,50 @@
+<aside class="sidebar" [ngClass]="{'collapsed': isCollapsed}">
+  <div class="sidebar-header">
+    <i class="menu-icon" (click)="toggleSidebar()">≡</i>
+    <span class="brand-logo" *ngIf="!isCollapsed">PIXLS</span>
+  </div>
+
+  <div class="user-profile" [ngClass]="{'compact': isCollapsed}">
+    <div class="avatar">
+      <img src="https://ui-avatars.com/api/?name=Company+Admin&background=CCFF90&color=000&font-weight=600" alt="Avatar">
+    </div>
+    <span class="user-name" *ngIf="!isCollapsed">Company Admin</span>
+    <i class="dropdown-icon" *ngIf="!isCollapsed">⌄</i>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a routerLink="/dashboard" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" title="Home">
+      <i class="icon">⌂</i> <span class="nav-text" *ngIf="!isCollapsed">Home</span>
+    </a>
+    <a routerLink="/dashboard/surveys/new" class="nav-item" routerLinkActive="active" title="Create Survey">
+      <i class="icon">✚</i> <span class="nav-text" *ngIf="!isCollapsed">Create Survey</span>
+    </a>
+    <a routerLink="/dashboard/surveys" class="nav-item" routerLinkActive="active" title="Videos & Webinars">
+      <i class="icon">▷</i> <span class="nav-text" *ngIf="!isCollapsed">Videos & Webinars</span>
+    </a>
+    <a routerLink="/dashboard/responses" class="nav-item" routerLinkActive="active" title="Quartet CMD">
+      <i class="icon">⟨⟩</i> <span class="nav-text" *ngIf="!isCollapsed">Quartet CMD</span>
+    </a>
+    <a routerLink="/dashboard/media" class="nav-item" routerLinkActive="active" title="Media">
+      <i class="icon">🖼</i> <span class="nav-text" *ngIf="!isCollapsed">Media</span>
+    </a>
+    <a routerLink="/dashboard/analytics" class="nav-item" routerLinkActive="active" title="Analytics">
+      <i class="icon">📊</i> <span class="nav-text" *ngIf="!isCollapsed">Analytics</span>
+    </a>
+    <a routerLink="/dashboard/ai" class="nav-item" routerLinkActive="active" title="AI">
+      <i class="icon">✨</i> <span class="nav-text" *ngIf="!isCollapsed">AI</span>
+    </a>
+    
+    <div class="nav-divider"></div>
+
+    <a routerLink="/dashboard/settings" class="nav-item" routerLinkActive="active" title="Settings">
+      <i class="icon">⚙</i> <span class="nav-text" *ngIf="!isCollapsed">Settings</span>
+    </a>
+    <a routerLink="/dashboard/help" class="nav-item" routerLinkActive="active" title="Help">
+      <i class="icon">⍐</i> <span class="nav-text" *ngIf="!isCollapsed">Help</span>
+    </a>
+    <a routerLink="/dashboard/feedback" class="nav-item" routerLinkActive="active" title="Feedbacks">
+      <i class="icon">📝</i> <span class="nav-text" *ngIf="!isCollapsed">Feedbacks</span>
+    </a>
+  </nav>
+</aside>

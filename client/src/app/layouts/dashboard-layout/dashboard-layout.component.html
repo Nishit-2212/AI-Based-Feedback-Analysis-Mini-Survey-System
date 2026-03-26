@@ -1,0 +1,8 @@
+<div class="dashboard-wrapper">
+  <app-sidebar (toggleSidebarEvent)="onSidebarToggled($event)"></app-sidebar>
+  <main class="dashboard-content" [ngClass]="{'collapsed': isSidebarCollapsed}">
+    <div class="dashboard-inner">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

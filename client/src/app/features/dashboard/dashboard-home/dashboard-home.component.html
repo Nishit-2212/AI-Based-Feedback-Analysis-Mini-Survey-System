@@ -1,0 +1,74 @@
+<div class="dashboard-header">
+  <h1>Hello Company Admin,</h1>
+  <div class="header-actions">
+    <i class="icon">🔔</i>
+    <i class="icon">💬</i>
+    <i class="icon">💳</i>
+  </div>
+</div>
+
+<div class="action-cards">
+  <div class="card">
+    <h3>✨ AI Insights</h3>
+    <p>Generate highly relevant results</p>
+  </div>
+  <div class="card">
+    <h3>📝 Create New Survey</h3>
+    <p>Build custom dynamic forms</p>
+  </div>
+  <div class="card">
+    <h3>📊 Global Analytics</h3>
+    <p>Analyze performance metrics</p>
+  </div>
+  <div class="card">
+    <h3>🗂 Commands</h3>
+    <p>Execute system shortcuts</p>
+  </div>
+</div>
+
+<div class="table-section">
+  <div class="table-header">
+    <h2>Active Surveys</h2>
+    <div class="table-actions">
+      <div class="search-box">
+        <i>🔍</i>
+        <input type="text" placeholder="Find Surveys / Workspaces">
+      </div>
+      <button class="btn-primary">+ Create New Survey</button>
+      <button class="btn-secondary">+ New Workspace</button>
+      <button class="btn-secondary">+ View</button>
+    </div>
+  </div>
+
+  <div class="table-responsive-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>REFERENCE</th>
+          <th>SURVEY NAME</th>
+          <th>DESCRIPTION</th>
+          <th>OWNER ↓↑</th>
+          <th>LAST UPDATE ↓↑</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let survey of surveys">
+          <td>{{survey.id}}</td>
+          <td><span class="ref-badge">{{survey.ref}}</span></td>
+          <td class="primary-text">{{survey.name}}</td>
+          <td>{{survey.desc}}</td>
+          <td>
+            <div class="owner-cell">
+              <img src="https://ui-avatars.com/api/?name=Company+Admin&background=CCFF90&color=000&rounded=true" alt="Avatar">
+              <span>{{survey.owner}}</span>
+            </div>
+          </td>
+          <td>{{survey.date}}</td>
+          <td class="action-cell">•••</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
