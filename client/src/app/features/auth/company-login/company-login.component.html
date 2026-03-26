@@ -3,7 +3,7 @@
     <h2>Company Portal</h2>
     <p>Sign in to manage your company surveys and insights.</p>
 
-    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <form  #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
       <div class="form-group">
         <label for="email">Work Email</label>
         <input 
@@ -12,8 +12,9 @@
           name="email" 
           class="form-control" 
           placeholder="Enter company email"
-          [(ngModel)]="loginData.email"
+          #name = 'ngModel'
           required
+          ngModel
         >
       </div>
 
@@ -25,8 +26,9 @@
           name="password" 
           class="form-control" 
           placeholder="Enter password"
-          [(ngModel)]="loginData.password"
+          #name = 'ngModel'
           required
+          ngModel
         >
       </div>
 

@@ -3,17 +3,18 @@
     <h2>Register your Company</h2>
     <p>Create a company workspace to gather feedback and AI insights.</p>
 
-    <form (ngSubmit)="onSubmit()" #signUpForm="ngForm">
+    <form #signUpForm="ngForm" (ngSubmit)="onSubmit(signUpForm)">
       <div class="form-group">
         <label for="yourName">Your Name</label>
         <input 
           type="text" 
           id="yourName" 
-          name="yourName" 
+          name="name" 
           class="form-control" 
           placeholder="E.g. John Doe"
-          [(ngModel)]="signUpData.yourName"
+          #name = 'ngModel'
           required
+          ngModel
         >
       </div>
 
@@ -25,8 +26,9 @@
           name="companyName" 
           class="form-control" 
           placeholder="E.g. Acme Corp"
-          [(ngModel)]="signUpData.companyName"
+          #companyName = 'ngModel'
           required
+          ngModel
         >
       </div>
 
@@ -35,11 +37,12 @@
         <input 
           type="email" 
           id="companyEmail" 
-          name="companyEmail" 
+          name="email" 
           class="form-control" 
           placeholder="admin@company.com"
-          [(ngModel)]="signUpData.companyEmail"
+          #companyName = 'ngModel'
           required
+          ngModel
         >
       </div>
 
@@ -52,8 +55,9 @@
             name="country" 
             class="form-control" 
             placeholder="E.g. United States"
-            [(ngModel)]="signUpData.country"
+            #country = 'ngModel'
             required
+            ngModel
           >
         </div>
         <div style="flex: 1;">
@@ -64,8 +68,9 @@
             name="state" 
             class="form-control" 
             placeholder="E.g. California"
-            [(ngModel)]="signUpData.state"
+            #state = 'ngModel'
             required
+            ngModel
           >
         </div>
       </div>
@@ -78,9 +83,10 @@
           name="password" 
           class="form-control" 
           placeholder="Create a strong password"
-          [(ngModel)]="signUpData.password"
+          #password = 'ngModel'
           required
           minlength="6"
+          ngModel
         >
       </div>
 

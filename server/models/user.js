@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
         type:Number,
         
     },
-    username: {
+    userName: {
         type:String,
         required: true
     },
@@ -52,5 +52,8 @@ User.googleLogin = async(data) => {
     return await commanDb.googleLogin(User,data);
 }
 
+User.login = async(data) => {
+    return await commanDb.login(User,data);
+}
 
 module.exports = User;

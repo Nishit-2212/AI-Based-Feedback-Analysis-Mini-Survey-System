@@ -3,7 +3,7 @@
     <h2>Welcome back</h2>
     <p>Please enter your details to sign in.</p>
 
-    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
       <div class="form-group">
         <label for="email">Email address</label>
         <input 
@@ -12,8 +12,9 @@
           name="email" 
           class="form-control" 
           placeholder="Enter your email"
-          [(ngModel)]="loginData.email"
+          #name = 'ngModel'
           required
+          ngModel
         >
       </div>
 
@@ -25,8 +26,9 @@
           name="password" 
           class="form-control" 
           placeholder="Enter your password"
-          [(ngModel)]="loginData.password"
+          #name = 'ngModel'
           required
+          ngModel
         >
       </div>
 

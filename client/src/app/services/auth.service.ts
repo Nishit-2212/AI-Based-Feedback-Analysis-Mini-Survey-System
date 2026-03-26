@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { company } from '../models/company.model';
+import { user } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +17,19 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/google`, { code });
   }
 
-  // // Placeholder for standard login
-  // login(data: any): Observable<any> {
-  //   return this.http.post(`${this.apiUrl}/login`, data);
-  // }
+  companySignup(Company: company): Observable<any> {
+    return this.http.post(`${this.apiUrl}/company/sign-up`,Company)
+  }
+
+  userSignup(User: user): Observable<any> {
+    return this.http.post(`${this.apiUrl}/user/sign-up`,User)
+  }
+
+  userLogin(User: user): Observable<any> {
+    return this.http.post(`${this.apiUrl}/user/login`,User)
+  }
+
+  companyLogin(Company: company): Observable<any> {
+    return this.http.post(`${this.apiUrl}/company/login`,Company)
+  }
 }

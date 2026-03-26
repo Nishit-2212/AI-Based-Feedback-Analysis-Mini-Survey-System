@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
+import { user } from '../../../models/user.model';
 
 @Component({
   selector: 'app-sign-up',
@@ -11,13 +13,21 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent {
-  signUpData = {
-    name: '',
-    email: '',
-    password: ''
-  };
+  
+  constructor(private authService:AuthService) {}
 
-  onSubmit() {
-    console.log('Sign-Up attempt', this.signUpData);
+  User: user | undefined;
+
+  onSubmit(val:NgForm) {
+    
+    this.User = val.value;
+    console.log('User ',this.User);
+    
+    if(this.User) {
+      this.authService.userSignup(this.User).subscribe((res) => {
+        console.log('response',res);
+      })
+    }
+
   }
 }

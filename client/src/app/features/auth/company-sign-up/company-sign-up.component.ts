@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { FormsModule, NgForm } from '@angular/forms';
+import { company } from '../../../models/company.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-company-sign-up',
@@ -11,16 +13,29 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./company-sign-up.component.css']
 })
 export class CompanySignUpComponent {
-  signUpData = {
-    yourName: '',
-    companyName: '',
-    companyEmail: '',
-    country: '',
-    state: '',
-    password: ''
-  };
+  // signUpData = {
+  //   name: '',
+  //   companyName: '',
+  //   companyEmail: '',
+  //   country: '',
+  //   state: '',
+  //   password: ''
+  // };
 
-  onSubmit() {
-    console.log('Company Sign-Up attempt', this.signUpData);
+  constructor(private authService:AuthService, private router: Router) {}
+
+  Company: company | undefined;
+
+  onSubmit(val: NgForm) {
+
+    this.Company = val.value;
+    console.log('details',this.Company)
+
+    if(this.Company) {
+      this.authService.companySignup(this.Company).subscribe((res) => {
+        console.log('response',res)
+      })
+    }
+
   }
 }

@@ -2,9 +2,10 @@ declare var google: any;
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { environment } from '../../../../environments/environment.development';
+import { user } from '../../../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -14,17 +15,26 @@ import { environment } from '../../../../environments/environment.development';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
-  loginData = {
-    email: '',
-    password: ''
-  };
+  
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {}
 
-  onSubmit() {
-    console.log('Login attempt', this.loginData);
+  User: user | undefined;
+
+  onSubmit(val:NgForm) {
+    
+    this.User = val.value;
+    console.log('User',this.User);
+
+    if(this.User) {
+      this.authService.userLogin(this.User).subscribe((res) => {
+        console.log('response',res);
+      })
+    }
+    
+
   }
 
   signInWithGoogle() {
