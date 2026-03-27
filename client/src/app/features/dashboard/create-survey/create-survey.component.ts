@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import { SurveyService } from '../../../services/survey.service';
 
 @Component({
   selector: 'app-create-survey',
@@ -12,15 +13,15 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } fr
 export class CreateSurveyComponent {
   surveyForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private surveyService:SurveyService) {
     this.surveyForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       questions: this.fb.array([])
     });
     
-    // Auto-add an initial empty question so the canvas isn't totally blank
-    this.addQuestion('MCQ (Single Choice)');
+    // By default one question added
+    this.addQuestion('MCQ');
   }
 
   get questions() {
@@ -35,7 +36,7 @@ export class CreateSurveyComponent {
     const questionGroup = this.fb.group({
       type: [type],
       text: ['', Validators.required],
-      options: this.fb.array(type !== 'Open Ended' ? [this.createOption(), this.createOption()] : [])
+      options: this.fb.array(type !== 'TEXT' ? [this.createOption(), this.createOption()] : [])
     });
     this.questions.push(questionGroup);
   }
@@ -61,7 +62,11 @@ export class CreateSurveyComponent {
   onSubmit() {
     if (this.surveyForm.valid) {
       console.log('Survey Final JSON Payload:', this.surveyForm.value);
-      alert('Survey Draft Created Successfully! The payload is printed cleanly in the browser console.');
+      this.surveyService.createSurvey(this.surveyForm.value).subscribe((res) => {
+        console.log('response',res);
+        
+      });
+      alert('Survey Created Successfully!');
     } else {
       this.surveyForm.markAllAsTouched();
       alert('Please fill out all required fields before submitting.');

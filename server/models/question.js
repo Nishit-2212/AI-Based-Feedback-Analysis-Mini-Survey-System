@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const questionsSchema = new mongoose.Schema({
 
     questionKey: {
-        type: mongoose.Schema.Types.ObjectId
+        type: String,
+        required: true
     },
     questionText: {
         type: String,
@@ -11,7 +12,7 @@ const questionsSchema = new mongoose.Schema({
     },
     questionType: {
         type: String,
-        enum: ['text', 'mcq', 'multiple'],
+        enum: ['TEXT', 'MCQ', 'MULTIPLE'],
         required: true
     },
     options: [String],
@@ -23,4 +24,9 @@ const questionsSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-module.exports = mongoose.model("question", questionsSchema);
+const Question = mongoose.model("question", questionsSchema);
+
+
+
+
+module.exports = Question;

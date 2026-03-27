@@ -20,8 +20,8 @@ app.use(express.json()); // Crucial for parsing { code: "..." } from Angular
 
 
 app.use('/api/auth',authRoutes);
+app.use('/api/company',companyRoutes);
 // app.use('/api/companies',transactionRoutes);
-// app.use('/api/company',companyRoutes);
 // app.use('/api/user',userRoutes)
 
 

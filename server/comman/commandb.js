@@ -161,17 +161,86 @@ const comman = {
             console.error("Error in googleLogin helper:", err);
             throw err;
         }
+    },
+
+
+    async createSurvey(Survey, Question, data) {
+
+        try {
+
+            console.log('inner create survey data', data);
+
+            const { title, description } = data;
+
+            const counter = await Counter.findOneAndUpdate(
+                { collectionName: Survey.modelName },
+                { $inc: { count: 1 } },
+                { new: true, upsert: true }
+            );
+
+            console.log('last counter number', counter.count);
+
+
+            const newSurvey = new Survey({
+                surveyName: title,
+                description: description,
+                companyId: '69c51fb1c8fda1f6a1cfcd55', // :TODO change it after you implement the token
+                surveyId: counter.count
+            })
+
+            await newSurvey.save();
+
+
+            // half done. create one array push all the id created by question and after that go iterate the that array and push it into survey.questions
+            // for (const question of questions) {
+
+            //     if (question.type === 'TEXT') {
+
+            //         const counter = await Counter.findOneAndUpdate(
+            //             { collectionName: Question.modelName },
+            //             { $inc: { count: 1 } },
+            //             { new: true, upsert: true }
+            //         );
+            //         console.log('Last count ', counter.count);
+
+            //         const newQuestion = new Question({
+            //             questionKey: counter.count,
+            //             questionText: question.text,
+            //             questionType: question.type,
+            //             surveyId: '69c659f932e3661b4e190c67'
+            //         })
+
+            //     }
+            //     else if (question.type === 'MCQ') {
+
+            //     }
+            //     else {
+
+            //     }
+            // }
+
+            return {
+                statusCode: 201,
+                success: true,
+                message: "Survey created succesfully",
+                data: newSurvey
+            };
+        }
+        catch (err) {
+            console.error("Error in creating survey:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Survey created unsuccesful",
+                error: {
+                    details: err
+                }
+            };
+        }
+
+
     }
 }
 
-/* okay so i have dought regarding the file structure in angular so basically i have two user one is admin and second one is user now 
-    now currently i have component based structure i have feature,services,models,shared folder in the features folder if auth folder in that i have login and logout component.
-    and in shared folder i have component folder in that i have navbar component and this navbar component i am using it globally in app.html like this <app-navbar></app-navbar>
-<main>
-  <router-outlet></router-outlet>
-</main>
-    .so in my website i have to show the navbar globally in every page. but when the admin is logged in my website it shows the side bar in that there so many functionality that i show but side bar only shows in the
-    company login and admin user. not in the simple user role. in the simple user role i just want show the navbar with user related features. now how can i design this strucutre can just go through with basic design with file structure so that i can 
-    understand
-*/
+
 module.exports = comman;
