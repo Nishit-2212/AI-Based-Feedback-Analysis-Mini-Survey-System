@@ -33,9 +33,9 @@
           <input type="text" formControlName="text" placeholder="Type your question prompt here..." class="input-field question-title-input">
 
           <!-- Options mapping (for MCQ and Multiple Choice) -->
-          <div *ngIf="q.get('type')?.value !== 'Open Ended'" formArrayName="options" class="options-container">
+          <div *ngIf="q.get('type')?.value !== 'TEXT'" formArrayName="options" class="options-container">
             <div *ngFor="let opt of getOptions(i).controls; let j=index" [formGroupName]="j" class="option-row">
-              <span class="option-marker">{{ q.get('type')?.value === 'MCQ (Single Choice)' ? '○' : '☐' }}</span>
+              <span class="option-marker">{{ q.get('type')?.value === 'MCQ' ? '○' : '☐' }}</span>
               <input type="text" formControlName="value" placeholder="Option {{j + 1}}" class="input-field option-input">
               <button class="btn-icon outline" (click)="removeOption(i, j)" *ngIf="getOptions(i).length > 1">✕</button>
             </div>
@@ -43,7 +43,7 @@
           </div>
 
           <!-- Open Ended Preview -->
-          <div *ngIf="q.get('type')?.value === 'Open Ended'" class="open-ended-preview">
+          <div *ngIf="q.get('type')?.value === 'TEXT'" class="open-ended-preview">
             <textarea disabled placeholder="Respondents will type out a long-form answer here..." class="input-field textarea-field preview"></textarea>
           </div>
 

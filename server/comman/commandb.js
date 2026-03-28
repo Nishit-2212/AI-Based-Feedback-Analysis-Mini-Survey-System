@@ -1,5 +1,8 @@
 const bcrypt = require("bcrypt");
 const Counter = require("../models/counter");
+const { v4: uuidv4 } = require('uuid');
+
+
 
 const comman = {
 
@@ -180,44 +183,64 @@ const comman = {
 
             console.log('last counter number', counter.count);
 
+            const surveyId = uuidv4(); 
+
 
             const newSurvey = new Survey({
                 surveyName: title,
                 description: description,
-                companyId: '69c51fb1c8fda1f6a1cfcd55', // :TODO change it after you implement the token
-                surveyId: counter.count
+                companyId: '69c6c792ed1861836dc6eea0', // :TODO change it after you implement the token
+                surveyId: counter.count,
+                surveyLink: surveyId
             })
 
             await newSurvey.save();
 
+            
+            const questionIds = [];
+            for (const question of data.questions) {
 
-            // half done. create one array push all the id created by question and after that go iterate the that array and push it into survey.questions
-            // for (const question of questions) {
+                const counter = await Counter.findOneAndUpdate(
+                    { collectionName: Question.modelName },
+                    { $inc: { count: 1 } },
+                    { new: true, upsert: true }
+                );
+                console.log('Last count ', counter.count);
 
-            //     if (question.type === 'TEXT') {
+                if (question.type === 'TEXT') {
 
-            //         const counter = await Counter.findOneAndUpdate(
-            //             { collectionName: Question.modelName },
-            //             { $inc: { count: 1 } },
-            //             { new: true, upsert: true }
-            //         );
-            //         console.log('Last count ', counter.count);
+                    const newQuestion = new Question({
+                        questionKey: counter.count,
+                        questionText: question.text,
+                        questionType: question.type,
+                        surveyId: '69c6c80e3528ab85962ddeb9' // :TODO change it after you implement the token
+                    })
+                    questionIds.push(newQuestion._id);
 
-            //         const newQuestion = new Question({
-            //             questionKey: counter.count,
-            //             questionText: question.text,
-            //             questionType: question.type,
-            //             surveyId: '69c659f932e3661b4e190c67'
-            //         })
+                    await newQuestion.save();
+                }
+                else {
 
-            //     }
-            //     else if (question.type === 'MCQ') {
+                    const options = [];
+                    for(const option of question.options){
+                        options.push(option.value);
+                        console.log('option', option);
+                    }
 
-            //     }
-            //     else {
+                    const newQuestion = new Question({
+                        questionKey: counter.count,
+                        questionText: question.text,
+                        questionType: question.type,
+                        surveyId: '69c6c80e3528ab85962ddeb9', // :TODO change it after you implement the token
+                        options: options
+                    })
+                    questionIds.push(newQuestion._id);
 
-            //     }
-            // }
+                    await newQuestion.save();
+                }
+            }
+
+            await Survey.findByIdAndUpdate(newSurvey._id, { $push: { questions: { $each: questionIds } } });
 
             return {
                 statusCode: 201,
@@ -237,8 +260,6 @@ const comman = {
                 }
             };
         }
-
-
     }
 }
 
