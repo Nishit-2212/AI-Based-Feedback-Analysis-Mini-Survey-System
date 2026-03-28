@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   googleSignIn(code: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/google`, { code });
+    return this.http.post(`${this.apiUrl}/google`, { code }, { withCredentials: true });
   }
 
   companySignup(Company: company): Observable<any> {
@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   userLogin(User: user): Observable<any> {
-    return this.http.post(`${this.apiUrl}/user/login`,User)
+    return this.http.post(`${this.apiUrl}/user/login`,User, { withCredentials: true })
   }
 
   companyLogin(Company: company): Observable<any> {

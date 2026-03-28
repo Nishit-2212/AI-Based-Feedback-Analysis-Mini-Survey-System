@@ -15,8 +15,11 @@ const PORT = process.env.PORT;
 const app = express();
 connectDB();
 
-app.use(cors());
-app.use(express.json()); // Crucial for parsing { code: "..." } from Angular
+app.use(cors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+}));
+app.use(express.json()); 
 
 
 app.use('/api/auth',authRoutes);

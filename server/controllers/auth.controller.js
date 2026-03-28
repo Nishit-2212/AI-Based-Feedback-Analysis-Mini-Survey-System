@@ -15,6 +15,21 @@ const userLogin = async(req,res) => {
 
     try {
         const result = await User.login(req.body);
+
+        res.cookie('refreshToken', result.refreshToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, //7 Day
+        });
+
+        res.cookie('accessToken', result.accessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 1 * 24 * 60 * 60 * 1000, //1 Day
+        });
+
         return res.status(result.statusCode).json({
             success: result.success,
             message: result.message,
@@ -119,19 +134,36 @@ const googleLogin = async (req, res) => {
         console.log("Google user data:", userData);
 
 
-        const user = await User.googleLogin(userData);
+        const result = await User.googleLogin(userData);
 
         // 5. Create a local JWT Token
-        const token = jwt.sign(
-            { email: userData.email, provider: 'google' },
-            process.env.JWT_SECRET || 'super_secret_jwt_key',
-            { expiresIn: '7d' }
-        );
+        res.cookie('refreshToken', result.refreshToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, //7 Day
+        });
 
-        res.status(200).json({ data: user, token, message: 'user logged in successfully' })
+        res.cookie('accessToken', result.accessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 1 * 24 * 60 * 60 * 1000, //1 Day
+        });
+
+        return res.status(result.statusCode).json({
+            success: result.success,
+            message: result.message,
+            data: result.data || null,
+            error: result.error || null
+        })
     } catch (error) {
         console.error("Google verification error:", error);
-        res.status(401).json({ message: 'Google Authentication failed' });
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: { details: err }
+        })
     }
 }
 

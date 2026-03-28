@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const Counter = require("../models/counter");
 const { v4: uuidv4 } = require('uuid');
+const { generateAccessToken, generateRefreshToken } = require('../utils/tokenUtil');
 
 
 
@@ -97,26 +98,8 @@ const comman = {
                 };
             }
 
-            // const token = generateAccessToken(getUserData);
-            // const RefreshToken = generateRefreshToken(getUserData._id);
-
-            // res.cookie('refreshToken', RefreshToken, {
-            //     httpOnly: true,
-            //     sameSite: "None",
-            //     secure: true,
-            //     maxAge: 7 * 24 * 60 * 60 * 1000, //7 Day
-            //     path: "/"
-            // });
-
-            // res.cookie('accessToken', token, {
-            //     httpOnly: true,
-            //     sameSite: "None",
-            //     secure: true,
-            //     maxAge: 1 * 24 * 60 * 60 * 1000, //1 Day
-            //     path: "/"
-            // });
-
-            // console.log(res)
+            const token = generateAccessToken(getUserData, model.modelName);
+            const RefreshToken = generateRefreshToken(getUserData._id);
 
             return {
                 statusCode: 200,
@@ -125,7 +108,9 @@ const comman = {
                 data: {
                     userName: getUserData.userName,
                     role: getUserData.role
-                }
+                },
+                refreshToken: RefreshToken,
+                accessToken: token
             }
         }
         catch (err) {
@@ -158,11 +143,31 @@ const comman = {
                 user = await newUser.save();
             }
 
-            return user;
-        }
+            const token = generateAccessToken(user, model.modelName);
+            const RefreshToken = generateRefreshToken(user._id);
+
+            
+            return {
+                statusCode: 200,
+                success: true,
+                data: {
+                    userName: user.userName,
+                    role: user.role
+                },
+                refreshToken: RefreshToken,
+                accessToken: token
+                }
+            }
         catch (err) {
-            console.error("Error in googleLogin helper:", err);
-            throw err;
+            console.log("Something goes wrong while login", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Login unsuccesful",
+                error: {
+                    details: err
+                }
+            };
         }
     },
 
