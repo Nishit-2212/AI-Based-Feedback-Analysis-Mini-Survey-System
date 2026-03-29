@@ -17,6 +17,7 @@ export class CreateSurveyComponent {
     this.surveyForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
+      textAnalyzer: [false],
       questions: this.fb.array([])
     });
     

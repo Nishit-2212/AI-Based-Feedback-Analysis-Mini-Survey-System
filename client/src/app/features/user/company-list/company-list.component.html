@@ -1,0 +1,23 @@
+<div class="user-portal-container">
+  <div class="header">
+    <h1>Available Organizations</h1>
+    <p>Select a company below to participate in their ongoing surveys and share your valuable feedback.</p>
+  </div>
+
+  <div *ngIf="companies.length === 0" class="empty-state">
+    <p>No companies are currently registered on the platform.</p>
+  </div>
+
+  <div *ngIf="companies.length > 0" class="company-grid">
+    <div *ngFor="let company of companies" class="company-card" (click)="viewSurveys(company._id)">
+      <div class="card-icon">
+        🏢
+      </div>
+      <div class="card-content">
+        <h3>{{ company.companyName }}</h3>
+        <p class="meta">{{ company.country }}</p>
+      </div>
+      <button class="btn-primary">View Surveys</button>
+    </div>
+  </div>
+</div>

@@ -47,4 +47,12 @@ Company.login = async(data) => {
     return await commanDb.login(Company,data);
 }
 
+Company.getAllCompanies = async() => {
+    return await commanDb.getAllCompanies(Company);
+}
+
+Company.getCompanyById = async(id) => {
+    return await commanDb.getCompanyById(Company,id);
+}
+
 module.exports = Company;

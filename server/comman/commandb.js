@@ -178,7 +178,7 @@ const comman = {
 
             console.log('inner create survey data', data);
 
-            const { title, description } = data;
+            const { title, description, textAnalyzer } = data;
 
             const counter = await Counter.findOneAndUpdate(
                 { collectionName: Survey.modelName },
@@ -196,13 +196,16 @@ const comman = {
                 description: description,
                 companyId: '69c6c792ed1861836dc6eea0', // :TODO change it after you implement the token
                 surveyId: counter.count,
-                surveyLink: surveyId
+                surveyLink: surveyId,
+                textAnalyzer: textAnalyzer
             })
 
             await newSurvey.save();
 
-            
+            // ===== SAVE REGULAR QUESTIONS =====
             const questionIds = [];
+            const allQuestionsData = []; // Store for AI generation
+
             for (const question of data.questions) {
 
                 const counter = await Counter.findOneAndUpdate(
@@ -218,8 +221,11 @@ const comman = {
                         questionKey: counter.count,
                         questionText: question.text,
                         questionType: question.type,
-                        surveyId: '69c6c80e3528ab85962ddeb9' // :TODO change it after you implement the token
+                        surveyId: newSurvey._id,
+                        isAiGenerated: false
                     })
+                    
+                    allQuestionsData.push({ text: question.text, type: question.type });
                     questionIds.push(newQuestion._id);
 
                     await newQuestion.save();
@@ -236,16 +242,74 @@ const comman = {
                         questionKey: counter.count,
                         questionText: question.text,
                         questionType: question.type,
-                        surveyId: '69c6c80e3528ab85962ddeb9', // :TODO change it after you implement the token
+                        surveyId: newSurvey._id,
+                        isAiGenerated: false,
                         options: options
                     })
+                    
+                    allQuestionsData.push({ text: question.text, type: question.type });
                     questionIds.push(newQuestion._id);
 
                     await newQuestion.save();
                 }
             }
 
+            // Link regular questions to survey
             await Survey.findByIdAndUpdate(newSurvey._id, { $push: { questions: { $each: questionIds } } });
+
+            // ===== GENERATE AI BOT DETECTION QUESTIONS IF ENABLED =====
+            if (textAnalyzer) {
+                try {
+                    const { generateQuestions } = require('../utils/openaiUtil');
+                    
+                    console.log('TextAnalyzer is enabled. Generating AI questions...');
+                    
+                    // Call OpenAI API
+                    const aiQuestions = await generateQuestions(
+                        title,
+                        description,
+                        allQuestionsData
+                    );
+
+                    console.log('AI Questions generated:', aiQuestions);
+
+                    // Save AI questions to database
+                    const aiQuestionIds = [];
+
+                    for (const aiQuestion of aiQuestions) {
+                        const counter = await Counter.findOneAndUpdate(
+                            { collectionName: Question.modelName },
+                            { $inc: { count: 1 } },
+                            { new: true, upsert: true }
+                        );
+
+                        const newAiQuestion = new Question({
+                            questionKey: counter.count,
+                            questionText: aiQuestion.text,
+                            questionType: aiQuestion.type || 'TEXT',
+                            surveyId: newSurvey._id,
+                            isAiGenerated: true
+                        });
+
+                        await newAiQuestion.save();
+                        aiQuestionIds.push(newAiQuestion._id);
+                        
+                        console.log('AI Question saved:', newAiQuestion._id);
+                    }
+
+                    // Link AI questions to survey
+                    await Survey.findByIdAndUpdate(
+                        newSurvey._id, 
+                        { $push: { aiGeneratedQuestions: { $each: aiQuestionIds } } }
+                    );
+
+                    console.log('AI questions linked to survey');
+
+                } catch (error) {
+                    console.error("Error generating AI questions:", error.message);
+                    // Survey still created successfully, AI generation is optional
+                }
+            }
 
             return {
                 statusCode: 201,
@@ -260,6 +324,78 @@ const comman = {
                 statusCode: 500,
                 success: false,
                 message: "Survey created unsuccesful",
+                error: {
+                    details: err
+                }
+            };
+        }
+    },
+
+
+    async getAllCompanies(Company){
+        try {
+            const companies = await Company.find({}, { password: 0, createdAt: 0, updatedAt: 0 });
+            return {
+                statusCode: 200,
+                success: true,
+                message: "Companies fetched succesfully",
+                data: companies
+            };
+        }
+        catch (err) {
+            console.error("Error in fetching companies:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Companies fetched unsuccesful",
+                error: {
+                    details: err
+                }
+            };
+        }
+    },
+
+
+    async getCompanyById(Company,id){
+        try {
+            const company = await Company.findById(id, { password: 0, createdAt: 0, updatedAt: 0 });
+            return {
+                statusCode: 200,
+                success: true,
+                message: "Company fetched succesfully",
+                data: company
+            };
+        }
+        catch (err) {
+            console.error("Error in fetching company:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Company fetched unsuccesful",
+                error: {
+                    details: err
+                }
+            };
+        }
+    },
+
+
+    async getCompanySurveys(Survey,companyId){
+        try {
+            const surveys = await Survey.find({ companyId: companyId, isActive: true }, { password: 0, createdAt: 0, updatedAt: 0 });
+            return {
+                statusCode: 200,
+                success: true,
+                message: "Surveys fetched succesfully",
+                data: surveys
+            };
+        }
+        catch (err) {
+            console.error("Error in fetching surveys:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Surveys fetched unsuccesful",
                 error: {
                     details: err
                 }

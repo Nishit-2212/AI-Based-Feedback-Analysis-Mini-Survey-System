@@ -1,0 +1,31 @@
+<div class="user-portal-container">
+  
+  <div class="top-nav">
+    <button class="btn-back" (click)="goBack()">← Back to Companies</button>
+  </div>
+
+  <div class="header">
+    <h1>{{ companyName }} Active Surveys</h1>
+    <p>Please select a survey to begin your feedback session.</p>
+  </div>
+
+  
+
+  <div *ngIf="surveys.length === 0" class="empty-state">
+    <p>This company currently has no active surveys available.</p>
+  </div>
+
+  <div *ngIf="surveys.length > 0" class="survey-list">
+    <div *ngFor="let survey of surveys" class="survey-card">
+      <div class="card-content">
+        <h3>{{ survey.surveyName || 'Untitled Survey' }}</h3>
+        <p class="description">{{ survey.description || 'No description provided.' }}</p>
+        <span class="date">Published: {{ survey.createdAt | date:'mediumDate' }}</span>
+      </div>
+      <div class="card-action">
+        <button class="btn-take-survey" (click)="takeSurvey(survey._id)">Take Survey</button>
+      </div>
+    </div>
+  </div>
+
+</div>

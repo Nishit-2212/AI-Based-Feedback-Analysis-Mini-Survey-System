@@ -17,7 +17,17 @@ const surveySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'company'
     },
+    textAnalyzer: {
+        type: Boolean,
+        default: false
+    },
     questions: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'question'
+        }
+    ],
+    aiGeneratedQuestions: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'question'
@@ -41,6 +51,10 @@ Survey.createSurvey = async(data,Question) => {
     return await commanDb.createSurvey(Survey,Question,data)
 }
 
+Survey.getCompanySurveys = async(companyId) => {
+    return await commanDb.getCompanySurveys(Survey,companyId)
+}
 
+ 
 
 module.exports = Survey;
