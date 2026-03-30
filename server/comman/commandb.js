@@ -92,14 +92,14 @@ const comman = {
 
             if (!passwordMatched) {
                 return {
-                    statusCode: 400,
-                    succes: false,
+                    statusCode: 401,
+                    success: false,
                     message: "password is incorrect"
                 };
             }
 
             const token = generateAccessToken(getUserData, model.modelName);
-            const RefreshToken = generateRefreshToken(getUserData._id);
+            const RefreshToken = generateRefreshToken(getUserData._id, model.modelName);
 
             return {
                 statusCode: 200,
@@ -146,7 +146,7 @@ const comman = {
             const token = generateAccessToken(user, model.modelName);
             const RefreshToken = generateRefreshToken(user._id);
 
-            
+
             return {
                 statusCode: 200,
                 success: true,
@@ -156,8 +156,8 @@ const comman = {
                 },
                 refreshToken: RefreshToken,
                 accessToken: token
-                }
             }
+        }
         catch (err) {
             console.log("Something goes wrong while login", err);
             return {
@@ -172,11 +172,37 @@ const comman = {
     },
 
 
-    async createSurvey(Survey, Question, data) {
+    async getUserById(model, id) {
+        try {
+            const user = await model.findById(id, { password: 0, createdAt: 0, updatedAt: 0 });
+            return {
+                statusCode: 200,
+                success: true,
+                message: "User fetched succesfully",
+                data: user
+            };
+        }
+        catch (err) {
+            console.error("Error in fetching User:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "User fetched unsuccesful",
+                error: {
+                    details: err
+                }
+            };
+        }
+    },
+
+
+    async createSurvey(Survey, Question, data, companyId) {
 
         try {
 
             console.log('inner create survey data', data);
+
+            // const companyId = req.user.id;
 
             const { title, description, textAnalyzer } = data;
 
@@ -188,13 +214,13 @@ const comman = {
 
             console.log('last counter number', counter.count);
 
-            const surveyId = uuidv4(); 
+            const surveyId = uuidv4();
 
 
             const newSurvey = new Survey({
                 surveyName: title,
                 description: description,
-                companyId: '69c6c792ed1861836dc6eea0', // :TODO change it after you implement the token
+                companyId: companyId,
                 surveyId: counter.count,
                 surveyLink: surveyId,
                 textAnalyzer: textAnalyzer
@@ -202,9 +228,8 @@ const comman = {
 
             await newSurvey.save();
 
-            // ===== SAVE REGULAR QUESTIONS =====
             const questionIds = [];
-            const allQuestionsData = []; // Store for AI generation
+            const allQuestionsData = [];
 
             for (const question of data.questions) {
 
@@ -224,7 +249,7 @@ const comman = {
                         surveyId: newSurvey._id,
                         isAiGenerated: false
                     })
-                    
+
                     allQuestionsData.push({ text: question.text, type: question.type });
                     questionIds.push(newQuestion._id);
 
@@ -233,7 +258,7 @@ const comman = {
                 else {
 
                     const options = [];
-                    for(const option of question.options){
+                    for (const option of question.options) {
                         options.push(option.value);
                         console.log('option', option);
                     }
@@ -246,7 +271,7 @@ const comman = {
                         isAiGenerated: false,
                         options: options
                     })
-                    
+
                     allQuestionsData.push({ text: question.text, type: question.type });
                     questionIds.push(newQuestion._id);
 
@@ -254,16 +279,14 @@ const comman = {
                 }
             }
 
-            // Link regular questions to survey
             await Survey.findByIdAndUpdate(newSurvey._id, { $push: { questions: { $each: questionIds } } });
 
-            // ===== GENERATE AI BOT DETECTION QUESTIONS IF ENABLED =====
             if (textAnalyzer) {
                 try {
                     const { generateQuestions } = require('../utils/openaiUtil');
-                    
+
                     console.log('TextAnalyzer is enabled. Generating AI questions...');
-                    
+
                     // Call OpenAI API
                     const aiQuestions = await generateQuestions(
                         title,
@@ -293,13 +316,13 @@ const comman = {
 
                         await newAiQuestion.save();
                         aiQuestionIds.push(newAiQuestion._id);
-                        
+
                         console.log('AI Question saved:', newAiQuestion._id);
                     }
 
                     // Link AI questions to survey
                     await Survey.findByIdAndUpdate(
-                        newSurvey._id, 
+                        newSurvey._id,
                         { $push: { aiGeneratedQuestions: { $each: aiQuestionIds } } }
                     );
 
@@ -307,7 +330,7 @@ const comman = {
 
                 } catch (error) {
                     console.error("Error generating AI questions:", error.message);
-                    // Survey still created successfully, AI generation is optional
+
                 }
             }
 
@@ -332,7 +355,7 @@ const comman = {
     },
 
 
-    async getAllCompanies(Company){
+    async getAllCompanies(Company) {
         try {
             const companies = await Company.find({}, { password: 0, createdAt: 0, updatedAt: 0 });
             return {
@@ -356,7 +379,7 @@ const comman = {
     },
 
 
-    async getCompanyById(Company,id){
+    async getCompanyById(Company, id) {
         try {
             const company = await Company.findById(id, { password: 0, createdAt: 0, updatedAt: 0 });
             return {
@@ -380,7 +403,7 @@ const comman = {
     },
 
 
-    async getCompanySurveys(Survey,companyId){
+    async getCompanySurveys(Survey, companyId) {
         try {
             const surveys = await Survey.find({ companyId: companyId, isActive: true }, { password: 0, createdAt: 0, updatedAt: 0 });
             return {

@@ -1,12 +1,11 @@
 const express = require('express');
 const userController = require('../controllers/user.controller');
+const { isAuth } = require('../middleware/isAuth.middleware')
 
 const router = express.Router();
 
-// Fetch all registered companies globally
-router.get('/companies', userController.getAllCompanies);
+router.get('/companies', isAuth, userController.getAllCompanies);
 
-// Fetch all generated surveys for a specific company
-router.get('/company/:companyId/surveys', userController.getCompanySurveys);
+router.get('/company/:companyId/surveys', isAuth, userController.getCompanySurveys);
 
 module.exports = router;

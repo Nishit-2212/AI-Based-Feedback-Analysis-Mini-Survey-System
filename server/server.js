@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const connectDB = require('./config/db.js');
 
+const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth.routes.js');
 const userRoutes = require('./routes/user.routes.js');
 const companyRoutes = require('./routes/company.route.js');
@@ -19,13 +20,15 @@ app.use(cors({
     origin: 'http://localhost:4200',
     credentials: true,
 }));
+
 app.use(express.json()); 
+app.use(cookieParser())
 
 
 app.use('/api/auth',authRoutes);
 app.use('/api/company',companyRoutes);
-// app.use('/api/companies',transactionRoutes);
 app.use('/api/user',userRoutes);
+// app.use('/api/companies',transactionRoutes);
 
 
 app.listen(PORT, () => {

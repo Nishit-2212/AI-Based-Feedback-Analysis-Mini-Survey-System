@@ -11,7 +11,7 @@ export const routes: Routes = [
     path: '', 
     component: MainLayoutComponent,
     children: [
-      { path: '', redirectTo: '/home', pathMatch: 'full' },
+      { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
       { path: 'home', component: CompanyListComponent },
       { path: 'company/:id/surveys', component: CompanySurveysComponent },
       { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) }

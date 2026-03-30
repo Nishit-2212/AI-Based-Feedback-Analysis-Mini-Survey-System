@@ -6,7 +6,7 @@ const Survey = require('../models/survey')
 const surveyCreate = async (req, res) => {
     try {
         console.log('inner survey Controller');
-        const result = await Survey.createSurvey(req.body.survey, Question);
+        const result = await Survey.createSurvey(req.body.survey, req.user.id, Question);
 
         console.log('req.protocol',req.protocol);
         console.log('req.get("host")',req.get("host"));

@@ -30,6 +30,6 @@ export class AuthService {
   }
 
   companyLogin(Company: company): Observable<any> {
-    return this.http.post(`${this.apiUrl}/company/login`,Company)
+    return this.http.post(`${this.apiUrl}/company/login`,Company,  { withCredentials: true })
   }
 }

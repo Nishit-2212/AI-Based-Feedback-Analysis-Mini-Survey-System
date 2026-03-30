@@ -1,9 +1,9 @@
 const Company = require('../models/company');
 const Survey = require('../models/survey');
 
-exports.getAllCompanies = async (req, res) => {
+const getAllCompanies = async (req, res) => {
     try {
-        console.log("Fetching all companies for User Portal...");
+        console.log("Fetching all companies...");
         
         const result = await Company.getAllCompanies();
 
@@ -19,7 +19,7 @@ exports.getAllCompanies = async (req, res) => {
     }
 };
 
-exports.getCompanySurveys = async (req, res) => {
+const getCompanySurveys = async (req, res) => {
     try {
         const { companyId } = req.params;
         console.log(`Company Id isa ${companyId}`);
@@ -42,3 +42,6 @@ exports.getCompanySurveys = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error connecting to DB" });
     }
 };
+
+
+module.exports = { getAllCompanies, getCompanySurveys}

@@ -15,6 +15,8 @@ route.post('/company/login',authController.companyLogin);
 
 route.post('/company/sign-up',authController.companySignup);
 
+route.post('/generateToken', authController.generateNewAccessToken);
+
 // route.get('/logout');
 
 // route.get('/me');

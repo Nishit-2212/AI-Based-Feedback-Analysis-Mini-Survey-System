@@ -1,7 +1,7 @@
 declare var google: any;
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { environment } from '../../../../environments/environment.development';
@@ -15,25 +15,40 @@ import { user } from '../../../models/user.model';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
-  
 
-  constructor(private authService: AuthService) {}
 
-  ngOnInit() {}
+  constructor(private authService: AuthService, private router: Router) { }
+
+  ngOnInit() { }
 
   User: user | undefined;
 
-  onSubmit(val:NgForm) {
-    
-    this.User = val.value;
-    console.log('User',this.User);
+  onSubmit(val: NgForm) {
 
-    if(this.User) {
-      this.authService.userLogin(this.User).subscribe((res) => {
-        console.log('response',res);
+    this.User = val.value;
+    console.log('User', this.User);
+
+    if (this.User) {
+      this.authService.userLogin(this.User).subscribe({
+        next: (res) => {
+          console.log('response', res);
+          console.log('res.success', res.success)
+
+          if (res?.success) {
+            alert(res?.message);
+            this.router.navigateByUrl('/home', { replaceUrl: true });
+            return;
+          }
+
+
+        },
+        error: (err) => {
+          alert(err?.error?.message);
+          console.log("res.messag", err)
+        }
       })
     }
-    
+
 
   }
 
@@ -43,26 +58,32 @@ export class LoginComponent implements OnInit {
       scope: 'email profile openid',
       ux_mode: 'popup',
       callback: (response: any) => {
-        // Here you will see: authuser, code, prompt, etc!
         console.log("Google Auth Response: ", response);
         if (response.code) {
-          // Send the authorization code to your Node.js Backend
           this.sendCodeToBackend(response.code);
         }
       },
     });
-    // Triggers the popup
+    
     client.requestCode();
   }
 
   sendCodeToBackend(code: string) {
-    // Call your Node API endpoint
+
     this.authService.googleSignIn(code).subscribe({
       next: (res: any) => {
-        console.log('Login Successful, JWT Token received:', res.token);
-        // Save token to localStorage and navigate to dashboard
+        console.log('Login Successful');
+        if (res?.success) {
+          alert(res?.message);
+          this.router.navigateByUrl('/home', { replaceUrl: true });
+          return;
+        }
+
       },
-      error: (err) => console.error('Login Failed', err)
+      error: (err) => {
+        alert(err?.error?.message);
+        console.log("res.messag", err)
+      }
     });
   }
 }

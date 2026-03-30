@@ -47,8 +47,8 @@ const surveySchema = new mongoose.Schema({
 const Survey = mongoose.model("survey",surveySchema);
 
 
-Survey.createSurvey = async(data,Question) => {
-    return await commanDb.createSurvey(Survey,Question,data)
+Survey.createSurvey = async(data, companyId, Question) => {
+    return await commanDb.createSurvey(Survey,Question,data,companyId)
 }
 
 Survey.getCompanySurveys = async(companyId) => {

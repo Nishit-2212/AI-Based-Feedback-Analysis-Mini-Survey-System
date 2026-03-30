@@ -3,21 +3,21 @@ const commanDb = require('../comman/commandb.js')
 
 const userSchema = new mongoose.Schema({
     userId: {
-        type:Number,
-        
+        type: Number,
+
     },
     userName: {
-        type:String,
+        type: String,
         required: true
     },
     email: {
-        type:String,
-        required:true,
+        type: String,
+        required: true,
         unique: true,
         lowercase: true
     },
     role: {
-        type:String,
+        type: String,
         default: 'user'
     },
     password: {
@@ -37,23 +37,27 @@ const userSchema = new mongoose.Schema({
     higherQualification: {
         type: String,
     }
-}, { timestamps: true})
+}, { timestamps: true })
 
 
 
-const User = mongoose.model("User",userSchema);
+const User = mongoose.model("User", userSchema);
 
 
-User.signUp = async(data) => {
-    return await commanDb.signUp(User,data);
+User.signUp = async (data) => {
+    return await commanDb.signUp(User, data);
 }
 
-User.googleLogin = async(data) => {
-    return await commanDb.googleLogin(User,data);
+User.googleLogin = async (data) => {
+    return await commanDb.googleLogin(User, data);
 }
 
-User.login = async(data) => {
-    return await commanDb.login(User,data);
+User.login = async (data) => {
+    return await commanDb.login(User, data);
+}
+
+User.getUserById = async(id) => {
+    return await commanDb.getUserById(User,id)
 }
 
 module.exports = User;

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { user } from '../../../models/user.model';
@@ -14,7 +14,7 @@ import { user } from '../../../models/user.model';
 })
 export class SignUpComponent {
   
-  constructor(private authService:AuthService) {}
+  constructor(private authService:AuthService, private router: Router) {}
 
   User: user | undefined;
 
@@ -28,6 +28,5 @@ export class SignUpComponent {
         console.log('response',res);
       })
     }
-
   }
 }

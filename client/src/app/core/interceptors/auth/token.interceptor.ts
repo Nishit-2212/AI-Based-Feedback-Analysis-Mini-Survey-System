@@ -4,7 +4,6 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   
   
   const newReq = req.clone({
-    
     withCredentials: true
   })
 

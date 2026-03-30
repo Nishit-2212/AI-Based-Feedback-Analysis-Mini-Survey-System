@@ -4,7 +4,7 @@ const commanDb = require('../comman/commandb.js')
 const companySchema = new mongoose.Schema({
     companyId: {
         type: Number,
-        // required: true
+        required: true
     },
     name: {
         type: String,

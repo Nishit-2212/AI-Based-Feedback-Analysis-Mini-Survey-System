@@ -28,7 +28,7 @@ export class CompanyListComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Failed to load companies', err);
+        console.error('Something Goes wrong', err);
       }
     });
   }
