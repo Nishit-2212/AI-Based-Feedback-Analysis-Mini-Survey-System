@@ -8,4 +8,8 @@ router.get('/companies', isAuth, userController.getAllCompanies);
 
 router.get('/company/:companyId/surveys', isAuth, userController.getCompanySurveys);
 
+router.get('/survey/:surveyId/intro', isAuth, userController.getSurveyIntroDetails);
+
+router.post('/survey/:surveyId/start', isAuth, userController.startSurvey);
+
 module.exports = router;

@@ -1,0 +1,66 @@
+<div class="player-container">
+  
+  <!-- Fatal Error Fallback -->
+  <div *ngIf="error" class="error-slate">
+    <div class="icon">⚠️</div>
+    <h2>Error Loading Survey</h2>
+    <p>{{ error }}</p>
+    <button class="btn-return" (click)="returnHome()">Return Home</button>
+  </div>
+
+  <!-- Final Completion Screen -->
+  <div *ngIf="completed && !error" class="completion-slate">
+    <div class="icon-success">✨</div>
+    <h2>Thank You!</h2>
+    <p>Your responses have been recorded under transaction <code>{{ transactionId }}</code>.</p>
+    <button class="btn-primary mt-3" (click)="returnHome()">Return Home</button>
+  </div>
+
+  <!-- Wizard Interface -->
+  <div *ngIf="!error && !completed && currentQuestion" class="wizard-card" [class.slide-animation]="currentIndex">
+    
+    <div class="wizard-header">
+      <div class="meta">
+        <span class="badge">{{ surveyName }}</span>
+      </div>
+      <h2 class="question-title">{{ currentQuestion.questionText }}</h2>
+    </div>
+
+    <div class="wizard-body">
+
+      <!-- Text Input -->
+      <div *ngIf="currentQuestion.questionType === 'TEXT'" class="input-group">
+        <textarea 
+          class="form-textarea" 
+          rows="5" 
+          placeholder="Please write your detailed thoughts here..." 
+          [(ngModel)]="currentTextAnswer"
+        ></textarea>
+      </div>
+
+      <!-- Multiple Choice Options (Radio logic) -->
+      <div *ngIf="currentQuestion.questionType === 'MCQ'" class="options-group">
+        <label *ngFor="let opt of currentQuestion.options" class="option-row select-row">
+          <input type="radio" name="mcqOption" [value]="opt" [(ngModel)]="currentTextAnswer">
+          <span class="option-label">{{ opt }}</span>
+        </label>
+      </div>
+
+      <!-- Multiple Select Options (Checkbox logic) -->
+      <div *ngIf="currentQuestion.questionType === 'MULTIPLE'" class="options-group">
+        <label *ngFor="let opt of currentQuestion.options" class="option-row checkbox-row">
+          <input type="checkbox" name="multiOption_{{opt}}" [(ngModel)]="currentCheckboxAnswers[opt]">
+          <span class="option-label">{{ opt }}</span>
+        </label>
+      </div>
+
+    </div>
+
+    <div class="wizard-footer">
+      <button class="btn-next" (click)="nextQuestion()">
+        {{ isLastQuestion ? 'Submit Responses' : 'Next' }} →
+      </button>
+    </div>
+
+  </div>
+</div>

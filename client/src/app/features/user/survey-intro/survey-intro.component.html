@@ -1,0 +1,51 @@
+<div class="user-portal-container">
+  
+  <div class="top-nav">
+    <button class="btn-back" (click)="goBack()">← Back</button>
+  </div>
+
+  
+
+  <div *ngIf="error" class="error-state">
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="goBack()">Return Home</button>
+  </div>
+
+  <div *ngIf="!error && surveyDetails" class="intro-card">
+    <div class="company-badge">
+      🏢 {{ surveyDetails.companyId?.companyName || 'Unknown Organization' }}
+    </div>
+    
+    <h1 class="survey-title">{{ surveyDetails.surveyName }}</h1>
+    
+    <div class="detail-divider"></div>
+
+    <div class="survey-description">
+      <h3>About this Survey</h3>
+      <p>{{ surveyDetails.description }}</p>
+    </div>
+
+    <div class="survey-meta">
+      <div class="meta-item">
+        <span class="icon">📅</span>
+        <div class="meta-text">
+          <strong>Published</strong>
+          <span>{{ surveyDetails.createdAt | date:'longDate' }}</span>
+        </div>
+      </div>
+      <div class="meta-item">
+        <span class="icon">⏱️</span>
+        <div class="meta-text">
+          <strong>Est. Time</strong>
+          <span>3 - 5 Minutes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-footer">
+      <button class="btn-start" (click)="startSurvey()">Start Survey</button>
+      <p class="disclaimer">Your responses are collected anonymously and securely.</p>
+    </div>
+  </div>
+
+</div>

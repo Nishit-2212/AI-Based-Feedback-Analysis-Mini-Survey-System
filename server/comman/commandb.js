@@ -424,6 +424,85 @@ const comman = {
                 }
             };
         }
+    },
+
+    async getSurveyIntro(Survey, surveyId) {
+        try {
+            
+            const survey = await Survey.findById(surveyId)
+                .populate('companyId', 'companyName')
+                .select('-password -createdAt -updatedAt -questions -aiGeneratedQuestions');
+            
+
+            console.log('Survey info:', survey);
+
+            if (!survey) {
+                return { statusCode: 404, success: false, message: "Survey not found" };
+            }
+            return {
+                statusCode: 200,
+                success: true,
+                message: "Survey Intro fetched successfully",
+                data: survey
+            };
+        }
+        catch (err) {
+            console.error("Error in fetching survey intro:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Failed to fetch survey intro",
+                error: { details: err }
+            };
+        }
+    },
+
+    async startSurveyTransaction(Survey, Transaction, surveyId, userId) {
+        try {
+            const uuidv4 = require('uuid').v4;
+            const transactionId = uuidv4();
+            
+            const newTransaction = new Transaction({
+                transactionId: transactionId,
+                surveyId: surveyId,
+                userId: userId,
+                answers: [] 
+            });
+
+            await newTransaction.save();
+
+            const survey = await Survey.findById(surveyId)
+                .populate('questions', 'questionText questionType options isAiGenerated _id')
+                .populate('aiGeneratedQuestions', 'questionText questionType options isAiGenerated _id')
+                .lean();
+
+            if (!survey) return { statusCode: 404, success: false, message: "Survey not found" };
+
+            let allQuestions = [];
+            if (survey.aiGeneratedQuestions) allQuestions.push(...survey.aiGeneratedQuestions);
+            if (survey.questions) allQuestions.push(...survey.questions);
+
+            // TODO: randomize all the question and return it
+
+            return {
+                statusCode: 201,
+                success: true,
+                message: "Transaction generated successfully.",
+                data: {
+                    transactionId: transactionId,
+                    questions: allQuestions,
+                    surveyName: survey.surveyName
+                }
+            };
+        } catch (err) {
+            console.error("Error generating survey Transaction:", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Server Error starting survey",
+                error: { details: err }
+            };
+        }
     }
 }
 

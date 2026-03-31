@@ -5,6 +5,9 @@ import { DashboardHomeComponent } from './features/dashboard/dashboard-home/dash
 import { CreateSurveyComponent } from './features/dashboard/create-survey/create-survey.component';
 import { CompanyListComponent } from './features/user/company-list/company-list.component';
 import { CompanySurveysComponent } from './features/user/company-surveys/company-surveys.component';
+import { SurveyIntroComponent } from './features/user/survey-intro/survey-intro.component';
+import { SurveyLayoutComponent } from './layouts/survey-layout/survey-layout.component';
+import { SurveyDisplayComponent } from './features/user/survey-display/survey-display.component';
 
 export const routes: Routes = [
   { 
@@ -14,6 +17,7 @@ export const routes: Routes = [
       { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
       { path: 'home', component: CompanyListComponent },
       { path: 'company/:id/surveys', component: CompanySurveysComponent },
+      { path: 'survey/:id/intro', component: SurveyIntroComponent },
       { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) }
     ]
   },
@@ -23,6 +27,13 @@ export const routes: Routes = [
     children: [
       { path: '', component: DashboardHomeComponent },
       { path: 'surveys/new', component: CreateSurveyComponent }
+    ]
+  },
+  {
+    path: 'take/:surveyId/td/:transactionId',
+    component: SurveyLayoutComponent,
+    children: [
+      { path: '', component: SurveyDisplayComponent }
     ]
   }
 ];

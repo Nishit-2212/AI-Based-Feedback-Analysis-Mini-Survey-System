@@ -22,7 +22,7 @@ export class CompanySurveysComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Extract the company ID strictly from the URL parameter configured in app.routes.ts
+    
     this.companyId = this.route.snapshot.paramMap.get('id');
 
     if (this.companyId) {
@@ -47,7 +47,7 @@ export class CompanySurveysComponent implements OnInit {
   }
 
   takeSurvey(surveyId: string) {
-    alert(` Survey ID is: ${surveyId}`);
+    this.router.navigate([`/survey/${surveyId}/intro`]);
   }
 
   goBack() {

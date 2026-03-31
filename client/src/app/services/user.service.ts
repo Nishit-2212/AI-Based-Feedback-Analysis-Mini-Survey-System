@@ -18,4 +18,13 @@ export class UserService {
   getCompanySurveys(companyId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/company/${companyId}/surveys`);
   }
+
+  getSurveyInfo(surveyId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/survey/${surveyId}/intro`);
+  }
+
+  startSurveyTransaction(surveyId: string): Observable<any> {
+    // Requires withCredentials via global interceptor or specific inclusion to send the user Auth token
+    return this.http.post<any>(`${this.apiUrl}/survey/${surveyId}/start`, {}, { withCredentials: true });
+  }
 }

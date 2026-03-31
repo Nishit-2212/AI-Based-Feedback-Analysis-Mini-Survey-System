@@ -1,5 +1,6 @@
 const Company = require('../models/company');
 const Survey = require('../models/survey');
+const commanDb = require('../comman/commandb'); 
 
 const getAllCompanies = async (req, res) => {
     try {
@@ -43,5 +44,46 @@ const getCompanySurveys = async (req, res) => {
     }
 };
 
+const getSurveyIntroDetails = async (req, res) => {
+    try {
+        const { surveyId } = req.params;
+        console.log(`Survey Id is :- ${surveyId}`);
 
-module.exports = { getAllCompanies, getCompanySurveys}
+        const result = await Survey.getSurveyIntro(surveyId);
+
+        return res.status(result.statusCode).json({
+            success: result.success,
+            message: result.message,
+            data: result.data || null,
+            error: result.error || null
+        });
+    } catch (error) {
+        console.error("Error fetching survey intro:", error);
+        res.status(500).json({ success: false, message: "Internal server error connecting to DB" });
+    }
+};
+
+const Transaction = require('../models/transaction');
+
+const startSurvey = async (req, res) => {
+    try {
+        const { surveyId } = req.params;
+        const userId = req.user.id; 
+
+        console.log(`Survey Id  ${surveyId} and User id ${userId}`);
+
+        const result = await commanDb.startSurveyTransaction(Survey, Transaction, surveyId, userId);
+
+        return res.status(result.statusCode).json({
+            success: result.success,
+            message: result.message,
+            data: result.data || null,
+            error: result.error || null
+        });
+    } catch (error) {
+        console.error("Error initializing survey transaction:", error);
+        res.status(500).json({ success: false, message: "Internal server error connecting to DB" });
+    }
+};
+
+module.exports = { getAllCompanies, getCompanySurveys, getSurveyIntroDetails, startSurvey }

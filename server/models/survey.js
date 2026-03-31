@@ -55,6 +55,9 @@ Survey.getCompanySurveys = async(companyId) => {
     return await commanDb.getCompanySurveys(Survey,companyId)
 }
 
+Survey.getSurveyIntro = async(surveyId) => {
+    return await commanDb.getSurveyIntro(Survey, surveyId)
+}
  
 
 module.exports = Survey;
