@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const commanDb = require('../comman/commandb.js')
 
 const answerSchema = new mongoose.Schema({
     questionKey: {
@@ -23,4 +24,14 @@ const transactionSchema = new mongoose.Schema({
     answers: [answerSchema]
 }, { timestamps: true })
 
-module.exports = mongoose.model("transaction", transactionSchema);
+
+
+const Transaction = mongoose.model("transaction", transactionSchema);
+
+
+Transaction.submitResponse = async (td,data) => {
+    console.log('inner transaction Model')
+    return await commanDb.submitResponse(td,data,Transaction);
+}
+
+module.exports = Transaction;

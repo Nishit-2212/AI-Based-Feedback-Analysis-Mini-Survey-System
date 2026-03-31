@@ -1,11 +1,11 @@
 const Company = require('../models/company');
 const Survey = require('../models/survey');
-const commanDb = require('../comman/commandb'); 
+const commanDb = require('../comman/commandb');
 
 const getAllCompanies = async (req, res) => {
     try {
         console.log("Fetching all companies...");
-        
+
         const result = await Company.getAllCompanies();
 
         return res.status(result.statusCode).json({
@@ -23,11 +23,16 @@ const getAllCompanies = async (req, res) => {
 const getCompanySurveys = async (req, res) => {
     try {
         const { companyId } = req.params;
+        const { id } = req.user;
         console.log(`Company Id isa ${companyId}`);
 
         const company = await Company.getCompanyById(companyId);
+        
         if (!company) {
-            return res.status(404).json({ success: false, message: "Company not found" });
+            return res.status(404).json({
+                success: false,
+                message: "Company not found"
+            });
         }
 
         const surveys = await Survey.getCompanySurveys(companyId);
@@ -68,7 +73,7 @@ const Transaction = require('../models/transaction');
 const startSurvey = async (req, res) => {
     try {
         const { surveyId } = req.params;
-        const userId = req.user.id; 
+        const userId = req.user.id;
 
         console.log(`Survey Id  ${surveyId} and User id ${userId}`);
 

@@ -196,7 +196,7 @@ const generateNewAccessToken = async (req, res) => {
     console.log("Inner generateTokenFromRefreshToken");
 
     if (!refreshToken) {
-        return res.status(400).json({ 
+        return res.status(400).json({
             message: "Refresh Token is not found"
         });
     }
@@ -257,6 +257,26 @@ const generateNewAccessToken = async (req, res) => {
 
 
 
+const logOut = async (req, res) => {
+
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        sameSite: "None",
+        secure: true,
+        path: "/"
+    });
+
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        sameSite: "None",
+        secure: true,
+        path: "/"
+    });
+
+    res.status(200).json({
+        message: "Logout SuccessFully",
+    })
+}
 
 
 const getUserFromRefreshToken = async (refreshToken) => {
@@ -292,6 +312,8 @@ const getUserFromRefreshToken = async (refreshToken) => {
 }
 
 
-module.exports = { userSignup, googleLogin, companySignup, userLogin, companyLogin, generateNewAccessToken };
+
+
+module.exports = { userSignup, googleLogin, companySignup, userLogin, companyLogin, generateNewAccessToken, logOut };
 
 

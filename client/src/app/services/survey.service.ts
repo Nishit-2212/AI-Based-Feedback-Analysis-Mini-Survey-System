@@ -7,12 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class SurveyService {
 
-  private apiUrl = 'http://localhost:3000/api/company';
+  private apiUrl = 'http://localhost:3000/api/surveys';
 
   constructor(private http: HttpClient) { }
 
   createSurvey(survey: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/surveys`, { survey })
+  }
+
+  submitResponse(answers: any[],transactionId: any):Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${transactionId}/submit`,answers)
   }
 
 }

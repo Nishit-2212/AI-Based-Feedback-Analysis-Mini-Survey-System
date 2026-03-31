@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
-import { SurveyService } from '../../../services/survey.service';
+import { CompanyService } from '../../../services/company.service';
 
 @Component({
   selector: 'app-create-survey',
@@ -13,7 +13,7 @@ import { SurveyService } from '../../../services/survey.service';
 export class CreateSurveyComponent {
   surveyForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private surveyService:SurveyService) {
+  constructor(private fb: FormBuilder, private companyService:CompanyService) {
     this.surveyForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
@@ -63,9 +63,8 @@ export class CreateSurveyComponent {
   onSubmit() {
     if (this.surveyForm.valid) {
       console.log('Survey Final JSON Payload:', this.surveyForm.value);
-      this.surveyService.createSurvey(this.surveyForm.value).subscribe((res) => {
+      this.companyService.createSurvey(this.surveyForm.value).subscribe((res) => {
         console.log('response',res);
-        
       });
       alert('Survey Created Successfully!');
     } else {

@@ -1,5 +1,5 @@
 <div class="player-container">
-  
+
   <!-- Fatal Error Fallback -->
   <div *ngIf="error" class="error-slate">
     <div class="icon">⚠️</div>
@@ -12,13 +12,12 @@
   <div *ngIf="completed && !error" class="completion-slate">
     <div class="icon-success">✨</div>
     <h2>Thank You!</h2>
-    <p>Your responses have been recorded under transaction <code>{{ transactionId }}</code>.</p>
     <button class="btn-primary mt-3" (click)="returnHome()">Return Home</button>
   </div>
 
-  <!-- Wizard Interface -->
+
   <div *ngIf="!error && !completed && currentQuestion" class="wizard-card" [class.slide-animation]="currentIndex">
-    
+
     <div class="wizard-header">
       <div class="meta">
         <span class="badge">{{ surveyName }}</span>
@@ -30,15 +29,11 @@
 
       <!-- Text Input -->
       <div *ngIf="currentQuestion.questionType === 'TEXT'" class="input-group">
-        <textarea 
-          class="form-textarea" 
-          rows="5" 
-          placeholder="Please write your detailed thoughts here..." 
-          [(ngModel)]="currentTextAnswer"
-        ></textarea>
+        <textarea class="form-textarea" rows="5" placeholder="Please write your detailed thoughts here..."
+          [(ngModel)]="currentTextAnswer"></textarea>
       </div>
 
-      <!-- Multiple Choice Options (Radio logic) -->
+      <!-- Multiple Choice Question -->
       <div *ngIf="currentQuestion.questionType === 'MCQ'" class="options-group">
         <label *ngFor="let opt of currentQuestion.options" class="option-row select-row">
           <input type="radio" name="mcqOption" [value]="opt" [(ngModel)]="currentTextAnswer">
@@ -46,7 +41,7 @@
         </label>
       </div>
 
-      <!-- Multiple Select Options (Checkbox logic) -->
+      <!-- Multiple Select Question -->
       <div *ngIf="currentQuestion.questionType === 'MULTIPLE'" class="options-group">
         <label *ngFor="let opt of currentQuestion.options" class="option-row checkbox-row">
           <input type="checkbox" name="multiOption_{{opt}}" [(ngModel)]="currentCheckboxAnswers[opt]">

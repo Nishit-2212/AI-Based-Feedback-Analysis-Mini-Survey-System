@@ -5,6 +5,7 @@ const { generateAccessToken, generateRefreshToken } = require('../utils/tokenUti
 
 
 
+
 const comman = {
 
     async signUp(model, data) {
@@ -405,7 +406,52 @@ const comman = {
 
     async getCompanySurveys(Survey, companyId) {
         try {
-            const surveys = await Survey.find({ companyId: companyId, isActive: true }, { password: 0, createdAt: 0, updatedAt: 0 });
+            const surveys = await Survey.find({ companyId: companyId, isActive: true }, { password: 0, updatedAt: 0 });
+
+            // const surveys = await Survey
+
+            // db.surveys.aggregate([
+            //     {
+            //         $match: {
+            //             companyId: ObjectId('69ca03caa925e4cad51a36d6'),
+            //             isActive: true
+            //         }
+            //     },
+            //     {
+            //         $lookup: {
+            //             from: "transactions",
+            //             let: { surveyId: "$_id" },
+            //             pipeline: [
+            //                 {
+            //                     $match: {
+            //                         $expr: {
+            //                             $and: [
+            //                                 { $eq: ["$surveyId", "$$surveyId"] },
+            //                                 { $eq: ["$userId", ObjectId("69ca0b55a5133a5aee6045db")] }
+            //                             ]
+            //                         }
+            //                     }
+            //                 }
+            //             ],
+            //             as: "transactionInfo"
+            //         }
+            //     },
+            //     {
+            //         $match: {
+            //             transactionInfo: { $size: 0 } 
+            //         }
+            //     },
+            //     {
+            //         $project: {
+            //             _id: 1,
+            //             surveyName: 1,
+            //             description: 1,
+            //             isActive: 1,
+            //             createdAt: 1
+            //         }
+            //     }
+            // ]);
+
             return {
                 statusCode: 200,
                 success: true,
@@ -428,11 +474,11 @@ const comman = {
 
     async getSurveyIntro(Survey, surveyId) {
         try {
-            
+
             const survey = await Survey.findById(surveyId)
                 .populate('companyId', 'companyName')
                 .select('-password -createdAt -updatedAt -questions -aiGeneratedQuestions');
-            
+
 
             console.log('Survey info:', survey);
 
@@ -461,12 +507,12 @@ const comman = {
         try {
             const uuidv4 = require('uuid').v4;
             const transactionId = uuidv4();
-            
+
             const newTransaction = new Transaction({
                 transactionId: transactionId,
                 surveyId: surveyId,
                 userId: userId,
-                answers: [] 
+                answers: []
             });
 
             await newTransaction.save();
@@ -476,11 +522,19 @@ const comman = {
                 .populate('aiGeneratedQuestions', 'questionText questionType options isAiGenerated _id')
                 .lean();
 
-            if (!survey) return { statusCode: 404, success: false, message: "Survey not found" };
+            if (!survey) {
+                return { statusCode: 404, success: false, message: "Survey not found" };
+            }
 
             let allQuestions = [];
-            if (survey.aiGeneratedQuestions) allQuestions.push(...survey.aiGeneratedQuestions);
-            if (survey.questions) allQuestions.push(...survey.questions);
+
+            if (survey.aiGeneratedQuestions) {
+                allQuestions.push(...survey.aiGeneratedQuestions);
+            }
+
+            if (survey.questions) {
+                allQuestions.push(...survey.questions);
+            }
 
             // TODO: randomize all the question and return it
 
@@ -501,6 +555,55 @@ const comman = {
                 success: false,
                 message: "Server Error starting survey",
                 error: { details: err }
+            };
+        }
+    },
+
+    async submitResponse(transactionId, data, Transaction) {
+        try {
+
+            console.log('inner commanDb call of submitResponse')
+            const getTransactionData = await Transaction.find({ transactionId: transactionId });
+
+            console.log('get the data of transaction', getTransactionData);
+
+            if (!getTransactionData) {
+                return {
+                    statusCode: 404,
+                    success: false,
+                    message: 'Incorrect transactionId',
+                    error: {
+                        details: 'Transaction id not found in the database'
+                    }
+                }
+            }
+
+            const insertAllResponse = await Transaction.findOneAndUpdate(
+                { transactionId: transactionId },
+                { $set: { answers: data } },
+                { new: true }
+            )
+
+            console.log('insertAllResponse'.insertAllResponse);
+
+            return {
+                statusCode: 200,
+                success: true,
+                message: 'Your response is sent.',
+                data: transactionId
+            }
+
+
+        }
+        catch (err) {
+            console.log('Error in submit the response');
+            return {
+                statusCode: 500,
+                success: false,
+                message: 'Server Error while submit the Response',
+                error: {
+                    details: err
+                }
             };
         }
     }

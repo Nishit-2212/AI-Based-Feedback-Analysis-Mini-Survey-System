@@ -1,7 +1,7 @@
 const express = require("express");
 const compnayController = require('../controllers/company.controller.js')
-const { isCompany } = require('../middleware/isCompany.middleware.js')
-const { isAuth } = require('../middleware/isAuth.middleware')
+const { isCompany } = require('../middleware/company.middleware.js')
+const { isAuth } = require('../middleware/auth.middleware.js')
 
 
 

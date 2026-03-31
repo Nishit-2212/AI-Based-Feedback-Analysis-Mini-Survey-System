@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../../services/user.service';
+import { SurveyService } from '../../../services/survey.service';
 
 @Component({
   selector: 'app-survey-display',
@@ -16,19 +18,16 @@ export class SurveyDisplayComponent implements OnInit {
 
   questions: any[] = [];
   currentIndex: number = 0;
-  
-  currentTextAnswer: string = ''; 
+
+  currentTextAnswer: string = '';
   currentCheckboxAnswers: { [key: string]: boolean } = {};
 
   surveyName: string = 'Feedback Survey';
 
   error: string | null = null;
-  completed: boolean = false; 
+  completed: boolean = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private route: ActivatedRoute, private router: Router, private surveyService: SurveyService) { }
 
   ngOnInit(): void {
     this.surveyId = this.route.snapshot.paramMap.get('surveyId');
@@ -39,18 +38,17 @@ export class SurveyDisplayComponent implements OnInit {
       return;
     }
 
-    this.checkCache();
+    this.getQuestionFromLocalStorage();
   }
 
-  checkCache() {
-
+  getQuestionFromLocalStorage() {
     const cachedQuestions = localStorage.getItem(`survey_questions`);
     const metaName = localStorage.getItem(`survey_Name`);
-    
+
     if (metaName) this.surveyName = metaName;
 
     if (cachedQuestions) {
-        this.questions = JSON.parse(cachedQuestions);
+      this.questions = JSON.parse(cachedQuestions);
     }
 
     if (!this.questions || this.questions.length === 0) {
@@ -59,7 +57,7 @@ export class SurveyDisplayComponent implements OnInit {
     }
   }
 
-  
+
 
   get currentQuestion() {
     if (this.questions.length === 0) return null;
@@ -71,7 +69,6 @@ export class SurveyDisplayComponent implements OnInit {
   }
 
   nextQuestion() {
-
     let answer: string[] = [];
 
     if (this.currentQuestion.questionType === 'MULTIPLE') {
@@ -85,48 +82,59 @@ export class SurveyDisplayComponent implements OnInit {
     }
 
     if (answer.length === 0) {
-        alert('Please write you answer.');
-        return; 
+      alert('Please write you answer.');
+      return;
     }
 
     const payload = {
-        questionKey: this.currentQuestion._id, 
-        answer: answer
+      questionKey: this.currentQuestion._id,
+      answer: answer
     };
 
     let survey_answer: any[] = [];
     const localStorageAnswer = localStorage.getItem(`survey_answer`);
     if (localStorageAnswer) {
-          survey_answer = JSON.parse(localStorageAnswer); 
+      survey_answer = JSON.parse(localStorageAnswer);
     }
 
-    survey_answer.push(payload);    
+    survey_answer.push(payload);
     localStorage.setItem(`survey_answer`, JSON.stringify(survey_answer));
 
     // 4. handle Submit logic
     if (this.isLastQuestion) {
-       this.submitTransaction(survey_answer);
+      this.submitTransaction(survey_answer);
     } else {
-       this.currentIndex++;
-       this.currentTextAnswer = '';
-       this.currentCheckboxAnswers = {};
+      // :TODO later add on for number of question
+      this.currentIndex++;
+      this.currentTextAnswer = '';
+      this.currentCheckboxAnswers = {};
     }
   }
 
   submitTransaction(finalAnswers: any[]) {
-      
-      console.log('--- SURVEY SUBMISSION PAYLOAD ---');
-      console.log('Transaction UUID:', this.transactionId);
-      console.log('Final Answers Array:', finalAnswers);
-      console.log('---------------------------------');
 
-      localStorage.removeItem(`survey_questions`);
-      localStorage.removeItem(`survey_Name`);
+    console.log('Transaction UUID:', this.transactionId);
+    console.log('Final Answers Array:', finalAnswers);
 
-      this.completed = true;
+    this.surveyService.submitResponse(finalAnswers, this.transactionId).subscribe({
+      next: (res) => {
+        console.log('response', res);
+        console.log('res.success', res.success)
+      },
+      error: (err) => {
+        alert(err?.error?.message);
+        console.log("res.messag", err)
+      }
+    })
+
+    localStorage.removeItem(`survey_questions`);
+    localStorage.removeItem(`survey_Name`);
+    localStorage.removeItem(`survey_answer`);
+
+    this.completed = true;
   }
 
   returnHome() {
-      this.router.navigate(['/home']);
+    this.router.navigate(['/home']);
   }
 }

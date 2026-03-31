@@ -24,7 +24,6 @@ export class UserService {
   }
 
   startSurveyTransaction(surveyId: string): Observable<any> {
-    // Requires withCredentials via global interceptor or specific inclusion to send the user Auth token
     return this.http.post<any>(`${this.apiUrl}/survey/${surveyId}/start`, {}, { withCredentials: true });
   }
 }
