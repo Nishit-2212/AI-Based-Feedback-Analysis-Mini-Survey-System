@@ -404,53 +404,49 @@ const comman = {
     },
 
 
-    async getCompanySurveys(Survey, companyId) {
+    async getCompanySurveys(Survey, companyId, userId) {
         try {
-            const surveys = await Survey.find({ companyId: companyId, isActive: true }, { password: 0, updatedAt: 0 });
+            const mongoose = require('mongoose');
 
-            // const surveys = await Survey
-
-            // db.surveys.aggregate([
-            //     {
-            //         $match: {
-            //             companyId: ObjectId('69ca03caa925e4cad51a36d6'),
-            //             isActive: true
-            //         }
-            //     },
-            //     {
-            //         $lookup: {
-            //             from: "transactions",
-            //             let: { surveyId: "$_id" },
-            //             pipeline: [
-            //                 {
-            //                     $match: {
-            //                         $expr: {
-            //                             $and: [
-            //                                 { $eq: ["$surveyId", "$$surveyId"] },
-            //                                 { $eq: ["$userId", ObjectId("69ca0b55a5133a5aee6045db")] }
-            //                             ]
-            //                         }
-            //                     }
-            //                 }
-            //             ],
-            //             as: "transactionInfo"
-            //         }
-            //     },
-            //     {
-            //         $match: {
-            //             transactionInfo: { $size: 0 } 
-            //         }
-            //     },
-            //     {
-            //         $project: {
-            //             _id: 1,
-            //             surveyName: 1,
-            //             description: 1,
-            //             isActive: 1,
-            //             createdAt: 1
-            //         }
-            //     }
-            // ]);
+            const surveys = await Survey.aggregate([
+                {
+                    $match: {
+                        companyId: new mongoose.Types.ObjectId(companyId),
+                        isActive: true
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "transactions",
+                        let: { surveyId: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$surveyId", "$$surveyId"] },
+                                            { $eq: ["$userId", new mongoose.Types.ObjectId(userId)] }
+                                        ]
+                                    }
+                                }
+                            }
+                        ],
+                        as: "transactionInfo"
+                    }
+                },
+                {
+                    $match: {
+                        transactionInfo: { $size: 0 } 
+                    }
+                },
+                {
+                    $project: {
+                        transactionInfo: 0,
+                        updatedAt: 0,
+                        password: 0
+                    }
+                }
+            ]);
 
             return {
                 statusCode: 200,

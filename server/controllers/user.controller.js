@@ -35,7 +35,7 @@ const getCompanySurveys = async (req, res) => {
             });
         }
 
-        const surveys = await Survey.getCompanySurveys(companyId);
+        const surveys = await Survey.getCompanySurveys(companyId, id);
 
         return res.status(surveys.statusCode).json({
             success: surveys.success,

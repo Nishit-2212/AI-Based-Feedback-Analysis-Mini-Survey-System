@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('../controllers/user.controller');
 const { isAuth } = require('../middleware/auth.middleware')
+const { isAlreadySubmitted } = require('../middleware/checkSurveySubmission');
 
 const router = express.Router();
 
@@ -10,6 +11,6 @@ router.get('/company/:companyId/surveys', isAuth, userController.getCompanySurve
 
 router.get('/survey/:surveyId/intro', isAuth, userController.getSurveyIntroDetails);
 
-router.post('/survey/:surveyId/start', isAuth, userController.startSurvey);
+router.post('/survey/:surveyId/start', isAuth, isAlreadySubmitted, userController.startSurvey);
 
 module.exports = router;

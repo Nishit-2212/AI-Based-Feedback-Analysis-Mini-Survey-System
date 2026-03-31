@@ -51,8 +51,8 @@ Survey.createSurvey = async(data, companyId, Question) => {
     return await commanDb.createSurvey(Survey,Question,data,companyId)
 }
 
-Survey.getCompanySurveys = async(companyId) => {
-    return await commanDb.getCompanySurveys(Survey,companyId)
+Survey.getCompanySurveys = async(companyId, userId) => {
+    return await commanDb.getCompanySurveys(Survey, companyId, userId)
 }
 
 Survey.getSurveyIntro = async(surveyId) => {

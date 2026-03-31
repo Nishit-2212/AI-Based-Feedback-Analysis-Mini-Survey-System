@@ -1,17 +1,38 @@
+const Transaction = require('../models/transaction');
 
-
-const isAlreadySubmitted = (req, res, next) => {
+const isAlreadySubmitted = async (req, res, next) => {
 
     console.log('inner checkSurveySubmssion middleware');
 
-    const user = req.user;
+    try {
+        const user = req.user;
+        const surveyId = req.params.surveyId;
 
-    // :TODO check the user already submitted or not
-    if(user.role == 'User') {
+        if (user.role == 'User') {
+            const transactionExists = await Transaction.findOne({ 
+                userId: user.id, 
+                surveyId: surveyId 
+            });
 
-    }
-    else {
+            if (transactionExists) {
+                return res.status(403).json({
+                    success: false,
+                    message: "You have already submitted or started this survey."
+                });
+            }
 
+            next();
+        }
+        else {
+            next();
+        }
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
     }
 
 }
+
+module.exports = { isAlreadySubmitted };
