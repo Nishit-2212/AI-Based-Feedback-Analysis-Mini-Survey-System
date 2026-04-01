@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const Counter = require("../models/counter");
 const { v4: uuidv4 } = require('uuid');
 const { generateAccessToken, generateRefreshToken } = require('../utils/tokenUtil');
-
+const mongoose = require('mongoose');
 
 
 
@@ -286,7 +286,7 @@ const comman = {
                 try {
                     const { generateQuestions } = require('../utils/openaiUtil');
 
-                    console.log('TextAnalyzer is enabled. Generating AI questions...');
+                    console.log('TextAnalyzer is on. and generating AI questions.');
 
                     // Call OpenAI API
                     const aiQuestions = await generateQuestions(
@@ -322,6 +322,7 @@ const comman = {
                     }
 
                     // Link AI questions to survey
+                    // Change if i am generating only one question
                     await Survey.findByIdAndUpdate(
                         newSurvey._id,
                         { $push: { aiGeneratedQuestions: { $each: aiQuestionIds } } }
@@ -404,9 +405,9 @@ const comman = {
     },
 
 
-    async getCompanySurveys(Survey, companyId, userId) {
+    async getPendingCompanySurvey(Survey, companyId, userId) {
         try {
-            const mongoose = require('mongoose');
+
 
             const surveys = await Survey.aggregate([
                 {
@@ -436,7 +437,7 @@ const comman = {
                 },
                 {
                     $match: {
-                        transactionInfo: { $size: 0 } 
+                        transactionInfo: { $size: 0 }
                     }
                 },
                 {
@@ -602,7 +603,145 @@ const comman = {
                 }
             };
         }
+    },
+
+    async getAllCompanySurveys(Survey, companyId) {
+
+        try {
+            const surveys = await Survey.find({ companyId: companyId }, { password: 0 });
+
+            return {
+                statusCode: 200,
+                success: true,
+                message: "All Surveys fetched succesfully",
+                data: surveys
+            };
+        }
+        catch (err) {
+            console.error("Error in fetching surveys:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Surveys fetched unsuccesful",
+                error: {
+                    details: err
+                }
+            };
+        }
+    },
+
+    async checkCompanySurveyExist(Survey, companyId, surveyId) {
+
+        try {
+
+            console.log('inner commanDb call');
+
+            const survey = await Survey.findOne({ _id: new mongoose.Types.ObjectId(surveyId), companyId: new mongoose.Types.ObjectId(companyId) });
+
+            console.log('checkSurveyExist', survey);
+
+            return {
+                statusCode: 200,
+                success: true,
+                message: "Surveys fetched succesfully",
+                data: survey
+            };
+
+        }
+        catch (err) {
+            console.error("Error in fetching company specific surveys:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Surveys fetched unsuccesful",
+                error: {
+                    details: err
+                }
+            };
+        }
+    },
+
+    async getCompanySurveyById(Survey, companyId, surveyId) {
+
+        try {
+
+            console.log('innser getCompanySurveyById commanDb method');
+
+            const surveys = await Survey.findOne({ companyId: new mongoose.Types.ObjectId(companyId), _id: new mongoose.Types.ObjectId(surveyId) }).populate('questions');
+
+            console.log('get specific survey of company', surveys);
+
+
+            if (!surveys) {
+                return {
+                    statusCode: 404,
+                    success: false,
+                    message: "Survey not found",
+                    error: {
+                        details: "Survey not found with provided ID"
+                    }
+                };
+            }
+
+            return {
+                statusCode: 200,
+                success: true,
+                message: "You Surveys fetched succesfully",
+                data: surveys
+            };
+
+
+        }
+        catch (err) {
+            console.error("Error in fetching surveys:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Survey not found",
+                error: {
+                    details: err
+                }
+            };
+        }
+    },
+
+
+    async deleteCompanySurveyById(Survey, surveyId) {
+
+        try {
+            const surveyDelete = await Survey.findByIdAndDelete(surveyId);
+
+            if (!surveyDelete) {
+                return {
+                    statusCode: 404,
+                    success: false,
+                    message: "Survey not found",
+                }
+            }
+
+            return {
+                statusCode: 200,
+                success: true,
+                message: "Survey deleted successfully",
+            }
+
+        }
+        catch (err) {
+            console.error("Error in deleting company specific surveys:-", err);
+            return {
+                statusCode: 500,
+                success: false,
+                message: "Surveys deleted Unsuccesful",
+                error: {
+                    details: err
+                }
+            };
+        }
+
     }
+
+
+
 }
 
 

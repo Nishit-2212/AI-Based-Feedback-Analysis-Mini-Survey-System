@@ -20,7 +20,7 @@ const getAllCompanies = async (req, res) => {
     }
 };
 
-const getCompanySurveys = async (req, res) => {
+const getPendingCompanySurvey = async (req, res) => {
     try {
         const { companyId } = req.params;
         const { id } = req.user;
@@ -35,7 +35,7 @@ const getCompanySurveys = async (req, res) => {
             });
         }
 
-        const surveys = await Survey.getCompanySurveys(companyId, id);
+        const surveys = await Survey.getPendingCompanySurvey(companyId, id);
 
         return res.status(surveys.statusCode).json({
             success: surveys.success,
@@ -91,4 +91,4 @@ const startSurvey = async (req, res) => {
     }
 };
 
-module.exports = { getAllCompanies, getCompanySurveys, getSurveyIntroDetails, startSurvey }
+module.exports = { getAllCompanies, getPendingCompanySurvey, getSurveyIntroDetails, startSurvey }

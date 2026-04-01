@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/companies', isAuth, userController.getAllCompanies);
 
-router.get('/company/:companyId/surveys', isAuth, userController.getCompanySurveys);
+router.get('/company/:companyId/surveys', isAuth, userController.getPendingCompanySurvey);
 
 router.get('/survey/:surveyId/intro', isAuth, userController.getSurveyIntroDetails);
 

@@ -1,6 +1,6 @@
 const express = require("express");
-const compnayController = require('../controllers/company.controller.js')
-const { isCompany } = require('../middleware/company.middleware.js')
+const companyController = require('../controllers/company.controller.js')
+const { isCompany, isSurveyOwner } = require('../middleware/company.middleware.js')
 const { isAuth } = require('../middleware/auth.middleware.js')
 
 
@@ -8,15 +8,17 @@ const { isAuth } = require('../middleware/auth.middleware.js')
 const route = express.Router();
 
 
-// route.get('/surveys');
+route.post('/surveys', isAuth, isCompany, companyController.surveyCreate);
 
-route.post('/surveys', isAuth, isCompany, compnayController.surveyCreate);
+route.get('/surveys', isAuth, isCompany, companyController.getAllCompanySurvey);
 
-// route.put('/surveys/:id');
+route.get('/surveys/:surveyId', isAuth, isCompany, isSurveyOwner, companyController.getCompanySurveyById);
 
-// route.delete('/surveys/:id');
+// route.put('/surveys/:surveyId', isAuth, isCompany, isSurveyOwner, compan);
 
-// route.patch('/surveys/:id/status');
+route.delete('/surveys/:surveyId', isAuth, isCompany, isSurveyOwner, companyController.deleteSurveyById);
+
+// route.patch('/surveys/:surveyId/status');
 
 
 

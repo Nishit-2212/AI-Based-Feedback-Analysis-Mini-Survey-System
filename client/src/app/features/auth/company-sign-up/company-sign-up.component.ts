@@ -22,18 +22,34 @@ export class CompanySignUpComponent {
   //   password: ''
   // };
 
-  constructor(private authService:AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   Company: company | undefined;
 
   onSubmit(val: NgForm) {
 
     this.Company = val.value;
-    console.log('details',this.Company)
+    console.log('details', this.Company)
 
-    if(this.Company) {
-      this.authService.companySignup(this.Company).subscribe((res) => {
-        console.log('response',res)
+    if (this.Company) {
+      this.authService.companySignup(this.Company).subscribe({
+        next: (res) => {
+          console.log('response', res);
+          console.log('res.success', res.success)
+
+          if (res?.success) {
+            alert(res?.message);
+            this.router.navigateByUrl('/auth/company-login', { replaceUrl: true });
+            return;
+          }
+
+
+        },
+        error: (err) => {
+          alert(err?.error?.message);
+          console.log("res.messag", err)
+        }
+
       })
     }
 

@@ -31,6 +31,8 @@ const questionsSchema = new mongoose.Schema({
 const Question = mongoose.model("question", questionsSchema);
 
 
-
+// dynamic_key_companyId_uuid.
+// add company_id in this model.
+// write logic in model and use commanDB for query only.
 
 module.exports = Question;
