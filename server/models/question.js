@@ -3,8 +3,10 @@ const mongoose = require('mongoose');
 const questionsSchema = new mongoose.Schema({
 
     questionKey: {
-        type: Number,
-        required: true
+        type: String,
+        required: true,
+        unique: true,
+        index: true
     },
     questionText: {
         type: String,
@@ -20,6 +22,11 @@ const questionsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'survey'
     },
+    companyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'company',
+        required: true
+    },
     isAiGenerated: {
         type: Boolean,
         default: false
@@ -31,8 +38,6 @@ const questionsSchema = new mongoose.Schema({
 const Question = mongoose.model("question", questionsSchema);
 
 
-// dynamic_key_companyId_uuid.
-// add company_id in this model.
-// write logic in model and use commanDB for query only.
+
 
 module.exports = Question;

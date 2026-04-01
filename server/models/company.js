@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const commanDb = require('../comman/commandb.js')
+const commanDb = require('../comman/commandb.js');
+const bcrypt = require("bcrypt");
+const { generateAccessToken, generateRefreshToken } = require('../utils/tokenUtil');
 
 const companySchema = new mongoose.Schema({
     companyId: {
@@ -40,19 +42,121 @@ const companySchema = new mongoose.Schema({
 const Company = mongoose.model("company",companySchema);
 
 Company.signUp = async(data) => {
-    return await commanDb.signUp(Company,data);
+    try {
+        const emailExists = await commanDb.getUserByEmail(Company, data.email);
+        if (emailExists) {
+            return {
+                statusCode: 400,
+                success: false,
+                message: "Email already exist please login",
+            };
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(data.password, salt);
+
+        // Fetching next auto-increment ID using isolated DB method
+        const nextId = await commanDb.getNextSequence(Company.modelName);
+
+        const newCompany = new Company({
+            ...data,
+            password: hashedPassword,
+            companyId: nextId
+        });
+
+        await newCompany.save();
+
+        return {
+            statusCode: 201,
+            success: true,
+            message: "signUp succesfully",
+            data: newCompany
+        };
+    } catch (err) {
+        console.error("Error in Company signUp:-", err);
+        return {
+            statusCode: 500,
+            success: false,
+            message: "SignedUp unsuccesful",
+            error: {
+                details: err
+            }
+        };
+    }
 }
 
 Company.login = async(data) => {
-    return await commanDb.login(Company,data);
+    try {
+        // DB Call routed through commanDb explicitly
+        const getCompanyData = await commanDb.getUserByEmail(Company, data.email);
+
+        if (!getCompanyData) {
+            return {
+                statusCode: 404,
+                success: false,
+                message: "Email is not found"
+            };
+        }
+
+        let { password } = data;
+        let storedPassword = getCompanyData.password;
+        const passwordMatched = await bcrypt.compare(password, storedPassword);
+
+        if (!passwordMatched) {
+            return {
+                statusCode: 401,
+                success: false,
+                message: "password is incorrect"
+            };
+        }
+
+        const token = generateAccessToken(getCompanyData, Company.modelName);
+        const RefreshToken = generateRefreshToken(getCompanyData._id, Company.modelName);
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Login sucessful",
+            data: {
+                companyName: getCompanyData.companyName,
+                name: getCompanyData.name,
+                role: 'company' // Safely appending a role identifier
+            },
+            refreshToken: RefreshToken,
+            accessToken: token
+        }
+    }
+    catch (err) {
+        console.log("Something goes wrong while login", err);
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Login unsuccesful",
+            error: {
+                details: err
+            }
+        };
+    }
 }
 
 Company.getAllCompanies = async() => {
-    return await commanDb.getAllCompanies(Company);
+    try {
+        const companies = await commanDb.findDB(Company, {}, { password: 0, createdAt: 0, updatedAt: 0 });
+        return { statusCode: 200, success: true, message: "Companies fetched succesfully", data: companies };
+    } catch (err) {
+        console.error("Error in fetching companies:-", err);
+        return { statusCode: 500, success: false, message: "Companies fetched unsuccesful", error: { details: err } };
+    }
 }
 
 Company.getCompanyById = async(id) => {
-    return await commanDb.getCompanyById(Company,id);
+    try {
+        const company = await commanDb.findByIdDB(Company, id, { password: 0, createdAt: 0, updatedAt: 0 });
+        return { statusCode: 200, success: true, message: "Company fetched succesfully", data: company };
+    } catch (err) {
+        console.error("Error in fetching company:-", err);
+        return { statusCode: 500, success: false, message: "Company fetched unsuccesful", error: { details: err } };
+    }
 }
 
 module.exports = Company;

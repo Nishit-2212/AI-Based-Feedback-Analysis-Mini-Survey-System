@@ -69,6 +69,7 @@ const getSurveyIntroDetails = async (req, res) => {
 };
 
 const Transaction = require('../models/transaction');
+const Question = require('../models/question');
 
 const startSurvey = async (req, res) => {
     try {
@@ -77,7 +78,7 @@ const startSurvey = async (req, res) => {
 
         console.log(`Survey Id  ${surveyId} and User id ${userId}`);
 
-        const result = await commanDb.startSurveyTransaction(Survey, Transaction, surveyId, userId);
+        const result = await Transaction.startSurveyTransaction(Survey, surveyId, userId, Question);
 
         return res.status(result.statusCode).json({
             success: result.success,
