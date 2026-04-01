@@ -13,6 +13,21 @@ export class CompanyService {
 
   createSurvey(survey: any): Observable<any> {
       return this.http.post(`${this.apiUrl}/surveys`, { survey })
-    }
+  }
 
+  getAllSurveys(): Observable<any> {
+      return this.http.get(`${this.apiUrl}/surveys`);
+  }
+
+  deleteSurvey(surveyId: string): Observable<any> {
+      return this.http.delete(`${this.apiUrl}/surveys/${surveyId}`);
+  }
+
+  toggleSurveyStatus(surveyId: string): Observable<any> {
+      return this.http.patch(`${this.apiUrl}/surveys/${surveyId}/status`, {});
+  }
+
+  getCompanyQuestions(): Observable<any> {
+      return this.http.get(`${this.apiUrl}/questions`);
+  }
 }

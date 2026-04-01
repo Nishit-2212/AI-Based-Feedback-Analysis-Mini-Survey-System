@@ -236,4 +236,23 @@ Survey.deleteCompanySurveyById = async(surveyId) => {
     }
 }
 
+Survey.toggleSurveyStatus = async(surveyId) => {
+    try {
+        const survey = await commanDb.findByIdDB(Survey, surveyId);
+        if(!survey) return { statusCode: 404, success: false, message: "Survey not found" };
+
+        const updatedSurvey = await commanDb.findOneAndUpdateDB(
+            Survey, 
+            { _id: new mongoose.Types.ObjectId(surveyId) }, 
+            { $set: { isActive: !survey.isActive } }, 
+            { new: true }
+        );
+
+        return { statusCode: 200, success: true, message: "Status updated successfully", data: updatedSurvey };
+    } catch (err) {
+        console.error("Error in updating status:-", err);
+        return { statusCode: 500, success: false, message: "Failed to update status", error: { details: err } };
+    }
+}
+
 module.exports = Survey;

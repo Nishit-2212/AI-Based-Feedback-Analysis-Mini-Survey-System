@@ -108,4 +108,41 @@ const deleteSurveyById = async (req, res) => {
 }
 
 
-module.exports = { surveyCreate, getAllCompanySurvey, getCompanySurveyById, deleteSurveyById };
+const toggleSurveyStatus = async (req, res) => {
+    try {
+        const { surveyId } = req.params;
+        const result = await Survey.toggleSurveyStatus(surveyId);
+
+        return res.status(result.statusCode).json({
+            success: result.success,
+            message: result.message,
+            data: result.data || null,
+            error: result.error || null
+        })
+    }
+    catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: { details: err }
+        })
+    }
+}
+
+const getAllCompanyQuestions = async (req, res) => {
+    try {
+        const companyId = req.user.id;
+        const result = await Question.getQuestionsByCompanyId(companyId);
+
+        return res.status(result.statusCode).json({
+            success: result.success,
+            message: result.message,
+            data: result.data || null,
+            error: result.error || null
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: "Internal Server Error", error: { details: err } });
+    }
+}
+
+module.exports = { surveyCreate, getAllCompanySurvey, getCompanySurveyById, deleteSurveyById, toggleSurveyStatus, getAllCompanyQuestions };

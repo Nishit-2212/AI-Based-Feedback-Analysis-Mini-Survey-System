@@ -18,8 +18,9 @@ route.get('/surveys/:surveyId', isAuth, isCompany, isSurveyOwner, companyControl
 
 route.delete('/surveys/:surveyId', isAuth, isCompany, isSurveyOwner, companyController.deleteSurveyById);
 
-// route.patch('/surveys/:surveyId/status');
+route.patch('/surveys/:surveyId/status', isAuth, isCompany, isSurveyOwner, companyController.toggleSurveyStatus);
 
+route.get('/questions', isAuth, isCompany, companyController.getAllCompanyQuestions);
 
 
 module.exports = route;

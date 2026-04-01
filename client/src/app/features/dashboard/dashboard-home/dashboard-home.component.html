@@ -44,29 +44,33 @@
     <table class="data-table">
       <thead>
         <tr>
-          <th>#</th>
-          <th>REFERENCE</th>
           <th>SURVEY NAME</th>
           <th>DESCRIPTION</th>
-          <th>OWNER ↓↑</th>
+          <th>ACTIVE STATUS</th>
           <th>LAST UPDATE ↓↑</th>
-          <th>ACTION</th>
+          <th>ACTIONS</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let survey of surveys">
-          <td>{{survey.id}}</td>
-          <td><span class="ref-badge">{{survey.ref}}</span></td>
-          <td class="primary-text">{{survey.name}}</td>
-          <td>{{survey.desc}}</td>
+          <td class="primary-text">{{survey.surveyName}}</td>
+          <td class="desc-text">{{survey.description}}</td>
           <td>
-            <div class="owner-cell">
-              <img src="https://ui-avatars.com/api/?name=Company+Admin&background=CCFF90&color=000&rounded=true" alt="Avatar">
-              <span>{{survey.owner}}</span>
-            </div>
+            <label class="switch">
+              <input type="checkbox" [checked]="survey.isActive" (change)="toggleStatus(survey)">
+              <span class="slider"></span>
+            </label>
+            <span style="font-size: 11px; margin-left: 8px; vertical-align: super; color: #4C4C50;">
+              {{survey.isActive ? 'Active' : 'Inactive'}}
+            </span>
           </td>
-          <td>{{survey.date}}</td>
-          <td class="action-cell">•••</td>
+          <td>{{survey.updatedAt | date:'mediumDate'}}</td>
+          <td class="action-cell">
+            <button class="btn-action delete" style="cursor: pointer; background: none; border: none; color: #ff5252;" (click)="deleteSurvey(survey._id)">🗑️ Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="surveys.length === 0">
+          <td colspan="5" style="text-align: center; padding: 20px;">No surveys found. Create one to get started!</td>
         </tr>
       </tbody>
     </table>
