@@ -13,4 +13,7 @@ router.get('/survey/:surveyId/intro', isAuth, userController.getSurveyIntroDetai
 
 router.post('/survey/:surveyId/start', isAuth, isAlreadySubmitted, userController.startSurvey);
 
+router.get('/survey', isAuth, userController.givenSurvey)
+
+
 module.exports = router;

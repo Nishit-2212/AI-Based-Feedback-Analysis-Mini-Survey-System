@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const commanDb = require('../comman/commandb.js');
 
 const questionsSchema = new mongoose.Schema({
 
@@ -39,26 +40,40 @@ const Question = mongoose.model("question", questionsSchema);
 
 Question.getQuestionsByCompanyId = async (companyId) => {
     try {
-        const commanDb = require('../comman/commandb.js');
+        // ::TODO modify this pipeline and fetch all question accept comman question
         const pipeline = [
-            { $match: { companyId: new mongoose.Types.ObjectId(companyId) } },
-            { $sort: { createdAt: -1 } },
-            { 
-                $group: { 
-                    _id: "$questionText", 
-                    doc: { $first: "$$ROOT" } 
-                } 
-            },
-            { $replaceRoot: { newRoot: "$doc" } },
-            { $sort: { createdAt: -1 } },
-            { $limit: 150 }
+            {
+                $match: {
+                    $and: [
+                        { companyId: new mongoose.Types.ObjectId(companyId) },
+                        { isAiGenerated: false },
+                    ],
+                }
+            }
         ];
 
         const questions = await commanDb.aggregateDB(Question, pipeline);
-        return { statusCode: 200, success: true, message: "Past questions fetched successfully", data: questions };
-    } catch (error) {
+        console.log('questions',questions)
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Past questions fetched successfully",
+            data: questions
+        };
+
+    }
+    catch (error) {
         console.error("Error fetching company questions:", error);
-        return { statusCode: 500, success: false, message: "Failed to fetch past questions", error: { details: error } };
+
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Failed to fetch past questions",
+            error: {
+                details: error
+            }
+        };
     }
 }
 

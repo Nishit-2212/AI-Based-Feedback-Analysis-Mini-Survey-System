@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const answerSchema = new mongoose.Schema({
     questionKey: {
         type: mongoose.Schema.Types.ObjectId
-    }, 
+    },
     answer: [String]
 })
 
@@ -44,7 +44,11 @@ Transaction.startSurveyTransaction = async (Survey, surveyId, userId, Question) 
         await newTransaction.save();
         const survey = await commanDb.findByIdDB(Survey, surveyId);
 
-        if (!survey) return { statusCode: 404, success: false, message: "Survey not found" };
+        if (!survey) return {
+            statusCode: 404,
+            success: false,
+            message: "Survey not found"
+        };
 
         let allQuestions = [];
 
@@ -58,16 +62,26 @@ Transaction.startSurveyTransaction = async (Survey, surveyId, userId, Question) 
             allQuestions.push(...standardQuestions);
         }
 
-        const shuffledQuestions = allQuestions.sort(() => Math.random() - 0.5);
+        // TODO: randomize all the questions key.
 
         return {
-            statusCode: 201, return: true, success: true,
+            statusCode: 201, return: true,
+            success: true,
             message: "Transaction generated successfully.",
-            data: { transactionId: transactionId, questions: allQuestions, surveyName: survey.surveyName }
+            data: {
+                transactionId: transactionId,
+                questions: allQuestions,
+                surveyName: survey.surveyName
+            }
         };
     } catch (err) {
         console.error("Error generating survey Transaction:", err);
-        return { statusCode: 500, success: false, message: "Server Error starting survey", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Server Error starting survey",
+            error: { details: err }
+        };
     }
 }
 
@@ -77,15 +91,35 @@ Transaction.submitResponse = async (transactionId, data) => {
         const getTransactionData = await commanDb.findDB(Transaction, { transactionId: transactionId });
 
         if (!getTransactionData || getTransactionData.length === 0) {
-            return { statusCode: 404, success: false, message: 'Incorrect transactionId', error: { details: 'Transaction id not found in the database' } }
+            return {
+                statusCode: 404,
+                success: false,
+                message: 'Incorrect transactionId',
+                error: {
+                    details: 'Transaction id not found in the database'
+                }
+            }
         }
 
         await commanDb.findOneAndUpdateDB(Transaction, { transactionId: transactionId }, { $set: { answers: data } }, { new: true });
 
-        return { statusCode: 200, success: true, message: 'Your response is sent.', data: transactionId };
-    } catch (err) {
+        return {
+            statusCode: 200,
+            success: true,
+            message: 'Your response is sent.',
+            data: transactionId
+        };
+    }
+    catch (err) {
         console.log('Error in submit the response');
-        return { statusCode: 500, success: false, message: 'Server Error while submit the Response', error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: 'Something went wrong while submit the Response',
+            error: {
+                details: err
+            }
+        };
     }
 }
 

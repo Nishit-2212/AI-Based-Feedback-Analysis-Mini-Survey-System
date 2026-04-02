@@ -113,7 +113,12 @@ User.googleLogin = async (data) => {
         }
     } catch (err) {
         console.log("Something goes wrong while login", err);
-        return { statusCode: 500, success: false, message: "Login unsuccesful", error: { details: err } };
+        return { 
+            statusCode: 500, 
+            success: false, 
+            message: "Login unsuccesful", 
+            error: { details: err } 
+        };
     }
 }
 
@@ -175,10 +180,20 @@ User.login = async (data) => {
 User.getUserById = async(id) => {
     try {
         const user = await commanDb.findByIdDB(User, id, { password: 0, createdAt: 0, updatedAt: 0 });
-        return { statusCode: 200, success: true, message: "User fetched succesfully", data: user };
+        return { 
+            statusCode: 200, 
+            success: true, 
+            message: "User fetched succesfully", 
+            data: user 
+        };
     } catch (err) {
         console.error("Error in fetching User:-", err);
-        return { statusCode: 500, success: false, message: "User fetched unsuccesful", error: { details: err } };
+        return { 
+            statusCode: 500, 
+            success: false, 
+            message: "User fetched unsuccesful", 
+            error: { details: err } 
+        };
     }
 }
 

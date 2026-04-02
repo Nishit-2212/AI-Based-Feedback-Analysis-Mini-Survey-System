@@ -25,6 +25,10 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        default: 'company'
+    },
     state: {
         type: String,
         required: true
@@ -37,11 +41,11 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: true
     }
-}, { timestamps: true})
+}, { timestamps: true })
 
-const Company = mongoose.model("company",companySchema);
+const Company = mongoose.model("company", companySchema);
 
-Company.signUp = async(data) => {
+Company.signUp = async (data) => {
     try {
         const emailExists = await commanDb.getUserByEmail(Company, data.email);
         if (emailExists) {
@@ -55,7 +59,6 @@ Company.signUp = async(data) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(data.password, salt);
 
-        // Fetching next auto-increment ID using isolated DB method
         const nextId = await commanDb.getNextSequence(Company.modelName);
 
         const newCompany = new Company({
@@ -85,9 +88,8 @@ Company.signUp = async(data) => {
     }
 }
 
-Company.login = async(data) => {
+Company.login = async (data) => {
     try {
-        // DB Call routed through commanDb explicitly
         const getCompanyData = await commanDb.getUserByEmail(Company, data.email);
 
         if (!getCompanyData) {
@@ -139,23 +141,50 @@ Company.login = async(data) => {
     }
 }
 
-Company.getAllCompanies = async() => {
+Company.getAllCompanies = async () => {
     try {
         const companies = await commanDb.findDB(Company, {}, { password: 0, createdAt: 0, updatedAt: 0 });
-        return { statusCode: 200, success: true, message: "Companies fetched succesfully", data: companies };
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Companies fetched succesfully",
+            data: companies
+        };
     } catch (err) {
         console.error("Error in fetching companies:-", err);
-        return { statusCode: 500, success: false, message: "Companies fetched unsuccesful", error: { details: err } };
+
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Companies fetched unsuccesful",
+            error:
+            {
+                details: err
+            }
+        };
     }
 }
 
-Company.getCompanyById = async(id) => {
+Company.getCompanyById = async (id) => {
     try {
         const company = await commanDb.findByIdDB(Company, id, { password: 0, createdAt: 0, updatedAt: 0 });
-        return { statusCode: 200, success: true, message: "Company fetched succesfully", data: company };
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Company fetched succesfully",
+            data: company
+        };
     } catch (err) {
         console.error("Error in fetching company:-", err);
-        return { statusCode: 500, success: false, message: "Company fetched unsuccesful", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Company fetched unsuccesful",
+            error: {
+                details: err
+            }
+        };
     }
 }
 

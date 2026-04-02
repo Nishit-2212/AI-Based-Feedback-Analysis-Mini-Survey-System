@@ -24,13 +24,13 @@ const surveySchema = new mongoose.Schema({
     },
     questions: [
         {
-            type: String, 
+            type: String,
             ref: 'question'
         }
     ],
     aiGeneratedQuestions: [
         {
-            type: String, 
+            type: String,
             ref: 'question'
         }
     ],
@@ -146,10 +146,24 @@ Survey.createSurvey = async (data, companyId, Question) => {
             }
         }
 
-        return { statusCode: 201, success: true, message: "Survey created succesfully", data: newSurvey };
-    } catch (err) {
+        return {
+            statusCode: 201,
+            success: true,
+            message: "Survey created succesfully",
+            data: newSurvey
+        };
+
+    }
+    catch (err) {
         console.error("Error in creating survey:-", err);
-        return { statusCode: 500, success: false, message: "Survey created unsuccesful", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Survey created unsuccesful",
+            error: {
+                details: err
+            }
+        };
     }
 }
 
@@ -162,7 +176,7 @@ Survey.getPendingCompanySurvey = async (companyId, userId) => {
                     from: "transactions",
                     let: { surveyId: "$_id" },
                     pipeline: [
-                        { $match: { $expr: { $and: [ { $eq: ["$surveyId", "$$surveyId"] }, { $eq: ["$userId", new mongoose.Types.ObjectId(userId)] } ] } } }
+                        { $match: { $expr: { $and: [{ $eq: ["$surveyId", "$$surveyId"] }, { $eq: ["$userId", new mongoose.Types.ObjectId(userId)] }] } } }
                     ],
                     as: "transactionInfo"
                 }
@@ -171,10 +185,24 @@ Survey.getPendingCompanySurvey = async (companyId, userId) => {
             { $project: { transactionInfo: 0, updatedAt: 0, password: 0 } }
         ]);
 
-        return { statusCode: 200, success: true, message: "Surveys fetched succesfully", data: surveys };
-    } catch (err) {
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Surveys fetched succesfully",
+            data: surveys
+        };
+
+    }
+    catch (err) {
         console.error("Error in fetching surveys:-", err);
-        return { statusCode: 500, success: false, message: "Surveys fetched unsuccesful", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Surveys fetched unsuccesful",
+            error: {
+                details: err
+            }
+        };
     }
 }
 
@@ -185,74 +213,215 @@ Survey.getSurveyIntro = async (surveyId) => {
             .select('-password -createdAt -updatedAt -questions -aiGeneratedQuestions');
 
         console.log('Survey info:', survey);
-        if (!survey) return { statusCode: 404, success: false, message: "Survey not found" };
+        if (!survey) {
+            return {
+                statusCode: 404,
+                success: false,
+                message: "Survey not found"
+            };
+        }
 
-        return { statusCode: 200, success: true, message: "Survey Intro fetched successfully", data: survey };
-    } catch (err) {
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Survey Intro fetched successfully",
+            data: survey
+        };
+
+    }
+    catch (err) {
         console.error("Error in fetching survey intro:-", err);
-        return { statusCode: 500, success: false, message: "Failed to fetch survey intro", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Failed to fetch survey intro",
+            error: {
+                details: err
+            }
+        };
     }
 }
 
 Survey.getAllCompanySurveys = async (companyId) => {
     try {
         const surveys = await commanDb.findDB(Survey, { companyId: companyId }, { password: 0 });
-        return { statusCode: 200, success: true, message: "All Surveys fetched succesfully", data: surveys };
-    } catch (err) {
+        return {
+            statusCode: 200,
+            success: true,
+            message: "All Surveys fetched succesfully",
+            data: surveys
+        };
+    }
+    catch (err) {
         console.error("Error in fetching surveys:-", err);
-        return { statusCode: 500, success: false, message: "Surveys fetched unsuccesful", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Surveys fetched unsuccesful",
+            error: {
+                details: err
+            }
+        };
     }
 }
 
 Survey.getCompanySurveyById = async (companyId, surveyId) => {
     try {
         const surveys = await Survey.findOne({ companyId: new mongoose.Types.ObjectId(companyId), _id: new mongoose.Types.ObjectId(surveyId) }).populate('questions');
-        if (!surveys) return { statusCode: 404, success: false, message: "Survey not found", error: { details: "Survey not found with provided ID" } };
-        return { statusCode: 200, success: true, message: "You Surveys fetched succesfully", data: surveys };
-    } catch (err) {
+
+        if (!surveys) {
+            return {
+                statusCode: 404,
+                success: false,
+                message: "Survey not found",
+                error: {
+                    details: "Survey not found with given ID"
+                }
+            }
+        }
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: "You Surveys fetched succesfully",
+            data: surveys
+        };
+
+    }
+    catch (err) {
         console.error("Error in fetching surveys:-", err);
-        return { statusCode: 500, success: false, message: "Survey not found", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Survey not found",
+            error: {
+                details: err
+            }
+        };
     }
 }
 
-Survey.checkCompanySurveyExist = async(companyId, surveyId) => {
+// this is for middleware
+Survey.checkCompanySurveyExist = async (companyId, surveyId) => {
     try {
         const survey = await commanDb.findOneDB(Survey, { _id: new mongoose.Types.ObjectId(surveyId), companyId: new mongoose.Types.ObjectId(companyId) });
-        return { statusCode: 200, success: true, message: "Surveys fetched succesfully", data: survey };
-    } catch (err) {
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Surveys fetched succesfully",
+            data: survey
+        };
+
+    }
+    catch (err) {
         console.error("Error in fetching company specific surveys:-", err);
-        return { statusCode: 500, success: false, message: "Surveys fetched unsuccesful", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Surveys fetched unsuccesful",
+            error: {
+                details: err
+            }
+        };
     }
 }
 
-Survey.deleteCompanySurveyById = async(surveyId) => {
+
+Survey.deleteCompanySurveyById = async (surveyId) => {
     try {
         const surveyDelete = await commanDb.findByIdAndDeleteDB(Survey, surveyId);
-        if (!surveyDelete) return { statusCode: 404, success: false, message: "Survey not found" };
-        return { statusCode: 200, success: true, message: "Survey deleted successfully" };
-    } catch (err) {
+
+        if (!surveyDelete) {
+            return {
+                statusCode: 404,
+                success: false,
+                message: "Survey not found"
+            };
+        }
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Survey deleted successfully"
+        };
+
+    }
+    catch (err) {
         console.error("Error in deleting company specific surveys:-", err);
-        return { statusCode: 500, success: false, message: "Surveys deleted Unsuccesful", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Surveys deleted Unsuccesful",
+            error: {
+                details: err
+            }
+        };
     }
 }
 
-Survey.toggleSurveyStatus = async(surveyId) => {
+
+Survey.toggleSurveyStatus = async (surveyId) => {
     try {
         const survey = await commanDb.findByIdDB(Survey, surveyId);
-        if(!survey) return { statusCode: 404, success: false, message: "Survey not found" };
+
+        if (!survey) {
+            return {
+                statusCode: 404,
+                success: false,
+                message: "Survey not found"
+            }
+        };
 
         const updatedSurvey = await commanDb.findOneAndUpdateDB(
-            Survey, 
-            { _id: new mongoose.Types.ObjectId(surveyId) }, 
-            { $set: { isActive: !survey.isActive } }, 
+            Survey,
+            { _id: new mongoose.Types.ObjectId(surveyId) },
+            { $set: { isActive: !survey.isActive } },
             { new: true }
         );
 
-        return { statusCode: 200, success: true, message: "Status updated successfully", data: updatedSurvey };
+        return {
+            statusCode: 200,
+            success: true,
+            message: "Status updated successfully",
+            data: updatedSurvey
+        };
     } catch (err) {
         console.error("Error in updating status:-", err);
-        return { statusCode: 500, success: false, message: "Failed to update status", error: { details: err } };
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Failed to update status",
+            error: {
+                details: err
+            }
+        };
     }
+}
+
+
+Survey.getAllSurveyByUserId = async (surveyId) => {
+
+    try {
+
+        
+        
+
+
+
+    }
+    catch (err) {
+        console.error("Error in fetching company specific surveys:-", err);
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Surveys fetched unsuccesful",
+            error: {
+                details: err
+            }
+        };
+    }
+
 }
 
 module.exports = Survey;

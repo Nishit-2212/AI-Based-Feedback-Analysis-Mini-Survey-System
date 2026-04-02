@@ -120,6 +120,7 @@ export class CreateSurveyComponent implements OnInit {
     if (this.surveyForm.valid) {
       console.log('Survey Final JSON Payload:', this.surveyForm.value);
       this.companyService.createSurvey(this.surveyForm.value).subscribe((res) => {
+        // :TODO handle response
         console.log('response',res);
       });
       alert('Survey Created Successfully!');
