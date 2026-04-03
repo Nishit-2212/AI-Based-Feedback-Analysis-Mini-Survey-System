@@ -97,9 +97,10 @@ const startSurvey = async (req, res) => {
 const givenSurvey = async (req, res) => {
 
     try {
-        const { id } = req.user.id;
+        const { id } = req.user;
 
-        const surveys = await Survey.getAllSurveyByUserId(id);
+        console.log('userId',id)
+        const surveys = await Transaction.getAllSurveyByUserId(id);
 
         return res.status(surveys.statusCode).json({
             success: surveys.success,

@@ -6,9 +6,9 @@ const isAuth = (req, res, next) => {
 
     console.log('inner isAuth middleware');
 
-    console.log('req.cookie',req.cookies);
-    
-    
+    console.log('req.cookie', req.cookies);
+
+
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
@@ -33,7 +33,7 @@ const isAuth = (req, res, next) => {
         return res.status(401).json({
             success: false,
             message: "Access Token is not found",
-            
+
             error: {
                 details: "pleas re-login"
             }
@@ -41,29 +41,29 @@ const isAuth = (req, res, next) => {
     }
 
     let secretKey = process.env.ACCESS_TOKEN_SECRET;
-    console.log('secretKey' , secretKey)
+    console.log('secretKey', secretKey)
     console.log("Inner verify Token middleware");
 
     try {
         const getData = jwt.verify(accessToken, secretKey);
-        console.log('getData',getData);
+        console.log('getData', getData);
         req.user = getData;
         next();
     }
     catch (err) {
-        console.log('inAuth error',err)
+        console.log('inAuth error', err)
         if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ 
+            return res.status(401).json({
                 error: "Token Expired",
                 success: false,
 
             });
         }
-        return res.status(400).json({ 
+        return res.status(400).json({
             success: false,
             message: "Access Token is not found",
             error: {
-                details: "Token Invalid or censored so please re-login" 
+                details: "Token Invalid or censored so please re-login"
             }
         }
         );
@@ -72,4 +72,34 @@ const isAuth = (req, res, next) => {
 }
 
 
-module.exports = { isAuth }
+const isAdmin = (req, res, next) => {
+
+    try {
+        const role = req.user.role;
+        console.log("role", role);
+
+        if (role !== 'admin') {
+            return res.status(400).json({
+                success: false,
+                message: "Sorry you can't access it",
+                error: {
+                    details: "pleas re-login with admin Email"
+                }
+            });
+        }
+        next();
+    }
+    catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: "Something went wrong durin ",
+            error: {
+                details: "Something goes wrong in CompanyMiddleware(isCompany method)"
+            }
+        });
+    }
+
+}
+
+
+module.exports = { isAuth, isAdmin }

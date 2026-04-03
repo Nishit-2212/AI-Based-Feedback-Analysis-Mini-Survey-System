@@ -5,10 +5,11 @@ require('dotenv').config();
 
 
 const generateAccessToken = (userData, role) => {
+    console.log('role',userData.role)
     return jwt.sign(
         {
             id: userData._id,
-            role: role
+            role: userData.role
         },
         process.env.ACCESS_TOKEN_SECRET || "jnjnmjnmbVF345",
         { expiresIn: "1d" }

@@ -22,5 +22,7 @@ route.patch('/surveys/:surveyId/status', isAuth, isCompany, isSurveyOwner, compa
 
 route.get('/questions', isAuth, isCompany, companyController.getAllCompanyQuestions);
 
+route.get('/commanQuestions', isAuth, isCompany, companyController.getAllCommanQuestions);
+
 
 module.exports = route;

@@ -113,7 +113,9 @@ Company.login = async (data) => {
         }
 
         const token = generateAccessToken(getCompanyData, Company.modelName);
-        const RefreshToken = generateRefreshToken(getCompanyData._id, Company.modelName);
+        const RefreshToken = generateRefreshToken(getCompanyData._id, getCompanyData.role);
+
+        console.log("getCompanyDetail",getCompanyData);
 
         return {
             statusCode: 200,
@@ -122,7 +124,7 @@ Company.login = async (data) => {
             data: {
                 companyName: getCompanyData.companyName,
                 name: getCompanyData.name,
-                role: 'company' // Safely appending a role identifier
+                role: 'company' // hard coded this but it will not affect in coding bcz i added role='admin' in the token'
             },
             refreshToken: RefreshToken,
             accessToken: token

@@ -118,4 +118,34 @@
       </div>
     </div>
   </div>
+
+
+  <!-- Past Questions Modal -->
+  <div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>My Past Questions</h2>
+        <button class="btn-icon danger" (click)="closeModal()" style="border: none; background: transparent; font-size: 20px;">✕</button>
+      </div>
+      
+      <div class="modal-search">
+        <input type="text" [(ngModel)]="searchQuery" [ngModelOptions]="{standalone: true}" placeholder="Search exact question texts..." class="input-field">
+      </div>
+
+      <div class="modal-body">
+        <div class="bank-card" *ngFor="let q of filteredQuestions" (click)="addFromBank(q)">
+          <div class="bank-tag">{{q.questionType}}</div>
+          <p class="bank-title">{{q.questionText}}</p>
+          <p class="bank-opts" *ngIf="q.options && q.options.length">Options: {{q.options.join(', ')}}</p>
+        </div>
+
+        <div *ngIf="filteredQuestions.length === 0" style="text-align: center; color: #8E8E93; padding: 20px;">
+          No past questions found securely.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 </div>

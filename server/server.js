@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth.routes.js');
 const userRoutes = require('./routes/user.routes.js');
 const companyRoutes = require('./routes/company.route.js');
 const transactionRoutes = require('./routes/transaction.route.js');
+const adminRoutes = require('./routes/admin.routes.js');
 
 
 const PORT = process.env.PORT;
@@ -29,6 +30,7 @@ app.use('/api/auth',authRoutes);
 app.use('/api/company',companyRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/surveys',transactionRoutes);
+app.use('/api/admin',adminRoutes);
 
 
 app.listen(PORT, () => {

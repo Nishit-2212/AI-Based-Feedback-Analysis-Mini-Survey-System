@@ -8,7 +8,7 @@ const isAlreadySubmitted = async (req, res, next) => {
         const user = req.user;
         const surveyId = req.params.surveyId;
 
-        if (user.role == 'User') {
+        if (user.role == 'user') {
             const transactionExists = await Transaction.findOne({ 
                 userId: user.id, 
                 surveyId: surveyId 

@@ -213,10 +213,10 @@ const generateNewAccessToken = async (req, res) => {
 
         let newAccessToken = null
         if (user?.companyName != null) {
-            newAccessToken = generateAccessToken(user, company);
+            newAccessToken = generateAccessToken(user);
         }
         else {
-            newAccessToken = generateAccessToken(user, User);
+            newAccessToken = generateAccessToken(user, user.role);
         }
 
         console.log("New Access Token", newAccessToken);
@@ -232,7 +232,7 @@ const generateNewAccessToken = async (req, res) => {
         else {
             return res.status(400).json({
                 success: false,
-                message: "user not Found"
+                message: "User not Found"
             });
         }
 

@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
 
 
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("user", userSchema);
 
 
 User.signUp = async (data) => {
@@ -97,11 +97,11 @@ User.googleLogin = async (data) => {
 
         if (!user) {
             const newUser = new User({ email, userName, provider });
-            user = await newUser.save(); 
+            user = await newUser.save();
         }
 
         const token = generateAccessToken(user, User.modelName);
-        const RefreshToken = generateRefreshToken(user._id, User.modelName); 
+        const RefreshToken = generateRefreshToken(user._id, User.modelName);
 
         return {
             statusCode: 200,
@@ -113,11 +113,11 @@ User.googleLogin = async (data) => {
         }
     } catch (err) {
         console.log("Something goes wrong while login", err);
-        return { 
-            statusCode: 500, 
-            success: false, 
-            message: "Login unsuccesful", 
-            error: { details: err } 
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Login unsuccesful",
+            error: { details: err }
         };
     }
 }
@@ -177,24 +177,56 @@ User.login = async (data) => {
     }
 }
 
-User.getUserById = async(id) => {
+User.getUserById = async (id) => {
     try {
         const user = await commanDb.findByIdDB(User, id, { password: 0, createdAt: 0, updatedAt: 0 });
-        return { 
-            statusCode: 200, 
-            success: true, 
-            message: "User fetched succesfully", 
-            data: user 
+        return {
+            statusCode: 200,
+            success: true,
+            message: "User fetched succesfully",
+            data: user
         };
-    } catch (err) {
+    } 
+    catch (err) {
         console.error("Error in fetching User:-", err);
-        return { 
-            statusCode: 500, 
-            success: false, 
-            message: "User fetched unsuccesful", 
-            error: { details: err } 
+        return {
+            statusCode: 500,
+            success: false,
+            message: "User fetched unsuccesful",
+            error: { details: err }
         };
     }
+}
+
+User.getAllUser = async () => {
+
+    try {
+
+        const result = await commanDb.findDB(User);
+
+        // console.log()
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: 'All user fetched successfully',
+            data: result
+        }
+        
+
+    }
+    catch (err) {
+
+        console.error("Error in fetching User:-", err);
+        return {
+            statusCode: 500,
+            success: false,
+            message: "Something went wrong while fetching all users",
+            error: { details: err }
+        };
+
+    }
+
 }
 
 module.exports = User;

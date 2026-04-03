@@ -94,7 +94,7 @@ Transaction.submitResponse = async (transactionId, data) => {
             return {
                 statusCode: 404,
                 success: false,
-                message: 'Incorrect transactionId',
+                message: 'Something went wrong you already respond this survey',
                 error: {
                     details: 'Transaction id not found in the database'
                 }
@@ -111,7 +111,7 @@ Transaction.submitResponse = async (transactionId, data) => {
         };
     }
     catch (err) {
-        console.log('Error in submit the response');
+        console.error('Error in submit the response');
         return {
             statusCode: 500,
             success: false,
@@ -122,5 +122,58 @@ Transaction.submitResponse = async (transactionId, data) => {
         };
     }
 }
+
+
+Transaction.getAllSurveyByUserId = async (userId) => {
+
+    try {
+
+        const pipeline = [
+            {
+                $match: {
+                    userId: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'surveys',
+                    foreignField: '_id',
+                    localField: 'surveyId',
+                    as: 'surveyInfo'
+                }
+            },
+            {
+                $project: {
+                    surveyName: { $arrayElemAt: ['$surveyInfo.surveyName', 0] },
+                    description: { $arrayElemAt: ['$surveyInfo.description', 0] }
+                }
+            }
+        ]
+
+        const survey = await commanDb.aggregateDB(Transaction, pipeline);
+
+        console.log('survey', survey)
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: 'fetched all given survey',
+            data: survey
+        }
+
+    }
+    catch (err) {
+        console.error('Error in fetching all user given survey');
+        return {
+            statusCode: 500,
+            success: false,
+            message: 'Something went wron during fetching survey of given survey',
+            error: {
+                details: err
+            }
+        }
+    }
+}
+
 
 module.exports = Transaction;

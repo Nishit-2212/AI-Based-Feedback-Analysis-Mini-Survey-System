@@ -400,28 +400,28 @@ Survey.toggleSurveyStatus = async (surveyId) => {
 }
 
 
-Survey.getAllSurveyByUserId = async (surveyId) => {
+// Survey.getAllSurveyByUserId = async (surveyId) => {
 
-    try {
+//     try {
 
         
         
 
 
 
-    }
-    catch (err) {
-        console.error("Error in fetching company specific surveys:-", err);
-        return {
-            statusCode: 500,
-            success: false,
-            message: "Surveys fetched unsuccesful",
-            error: {
-                details: err
-            }
-        };
-    }
+//     }
+//     catch (err) {
+//         console.error("Error in fetching company specific surveys:-", err);
+//         return {
+//             statusCode: 500,
+//             success: false,
+//             message: "Surveys fetched unsuccesful",
+//             error: {
+//                 details: err
+//             }
+//         };
+//     }
 
-}
+// }
 
 module.exports = Survey;

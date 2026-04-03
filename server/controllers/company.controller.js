@@ -129,6 +129,7 @@ const toggleSurveyStatus = async (req, res) => {
     }
 }
 
+
 const getAllCompanyQuestions = async (req, res) => {
     try {
         const companyId = req.user.id;
@@ -141,8 +142,39 @@ const getAllCompanyQuestions = async (req, res) => {
             error: result.error || null
         });
     } catch (err) {
-        return res.status(500).json({ success: false, message: "Internal Server Error", error: { details: err } });
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: { details: err }
+        });
     }
 }
 
-module.exports = { surveyCreate, getAllCompanySurvey, getCompanySurveyById, deleteSurveyById, toggleSurveyStatus, getAllCompanyQuestions };
+
+const getAllCommanQuestions = async (req, res) => {
+    try {
+
+        const result = await Question.getAllCommanQuestions();
+
+        console.log("Result in controller",result);
+
+        return res.status(result.statusCode).json({
+            success: result.success,
+            message: result.message,
+            data: result.data || null,
+            error: result.error || null
+        });
+
+    }
+    catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: { details: err }
+        });
+    }
+
+}
+
+
+module.exports = { surveyCreate, getAllCompanySurvey, getCompanySurveyById, deleteSurveyById, toggleSurveyStatus, getAllCompanyQuestions, getAllCommanQuestions };
