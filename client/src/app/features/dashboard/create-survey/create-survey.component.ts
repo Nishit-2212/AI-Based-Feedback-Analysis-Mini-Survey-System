@@ -13,8 +13,10 @@ import { CompanyService } from '../../../services/company.service';
 export class CreateSurveyComponent implements OnInit {
   surveyForm: FormGroup;
   pastQuestions: any[] = [];
+  commonQuestions: any[] = [];
   searchQuery: string = '';
   isModalOpen: boolean = false;
+  modalMode: 'PAST' | 'COMMON' = 'PAST';
 
   constructor(private fb: FormBuilder, private companyService:CompanyService) {
     this.surveyForm = this.fb.group({
@@ -30,6 +32,7 @@ export class CreateSurveyComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchPastQuestions();
+    this.fetchCommonQuestions();
   }
 
   fetchPastQuestions() {
@@ -45,13 +48,26 @@ export class CreateSurveyComponent implements OnInit {
     });
   }
 
-  get filteredQuestions() {
-    if (!this.searchQuery) return this.pastQuestions;
-    const lowerQuery = this.searchQuery.toLowerCase();
-    return this.pastQuestions.filter(q => q.questionText?.toLowerCase().includes(lowerQuery));
+  fetchCommonQuestions() {
+    this.companyService.getAllCommanQuestions().subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.commonQuestions = res.data;
+        }
+      },
+      error: (err: any) => console.error("Error fetching common questions:", err)
+    });
   }
 
-  openModal() {
+  get filteredQuestions() {
+    const activeList = this.modalMode === 'PAST' ? this.pastQuestions : this.commonQuestions;
+    if (!this.searchQuery) return activeList;
+    const lowerQuery = this.searchQuery.toLowerCase();
+    return activeList.filter(q => q.questionText?.toLowerCase().includes(lowerQuery));
+  }
+
+  openModal(mode: 'PAST' | 'COMMON' = 'PAST') {
+    this.modalMode = mode;
     this.isModalOpen = true;
   }
 

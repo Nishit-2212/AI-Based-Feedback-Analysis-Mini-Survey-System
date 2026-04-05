@@ -30,4 +30,8 @@ export class CompanyService {
   getCompanyQuestions(): Observable<any> {
       return this.http.get(`${this.apiUrl}/questions`);
   }
+
+  getAllCommanQuestions(): Observable<any> {
+      return this.http.get(`${this.apiUrl}/commanQuestions`);
+  }
 }

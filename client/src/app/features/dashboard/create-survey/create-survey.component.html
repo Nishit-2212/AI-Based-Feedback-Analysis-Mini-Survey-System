@@ -82,10 +82,10 @@
 
         <h3>Question Banks</h3>
         <p class="action-desc">Insert previously drafted structures immediately.</p>
-        <button type="button" class="btn-action-pill outlined" (click)="openModal()">
+        <button type="button" class="btn-action-pill outlined" (click)="openModal('PAST')">
           <i class="icon">🔍</i> My Past Questions
         </button>
-        <button type="button" class="btn-action-pill outlined" disabled style="opacity: 0.5; cursor: not-allowed;">
+        <button type="button" class="btn-action-pill outlined" (click)="openModal('COMMON')">
           <i class="icon">🌐</i> Fixed Questions
         </button>
       </div>
@@ -97,7 +97,7 @@
   <div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h2>My Past Questions</h2>
+        <h2>{{ modalMode === 'PAST' ? 'My Past Questions' : 'Common Questions' }}</h2>
         <button class="btn-icon danger" (click)="closeModal()" style="border: none; background: transparent; font-size: 20px;">✕</button>
       </div>
       
