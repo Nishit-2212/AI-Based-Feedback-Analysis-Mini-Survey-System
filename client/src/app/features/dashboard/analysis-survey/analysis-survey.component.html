@@ -92,6 +92,12 @@
               <ul>
                 <li *ngFor="let opt of q.options">{{ opt }}</li>
               </ul>
+              <div class="chart-container" *ngIf="chartOptionsMap[q._id]" style="margin-top: 24px;">
+                <highcharts-chart 
+                  [options]="chartOptionsMap[q._id]"
+                  style="width: 100%; height: 350px; display: block; overflow: hidden;">
+                </highcharts-chart>
+              </div>
             </div>
           </div>
 

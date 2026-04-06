@@ -16,6 +16,10 @@ export class CompanyService {
       return this.http.get(`${this.apiUrl}/surveys/${surveyId}`);
   }
 
+  getSurveyResponses(surveyId: string): Observable<any> {
+      return this.http.get(`${this.analysisUrl}/response/${surveyId}`);
+  }
+
   getTotalResponses(): Observable<any> {
       return this.http.get(`${this.analysisUrl}/responses`);
   }

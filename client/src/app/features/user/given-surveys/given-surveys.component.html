@@ -1,0 +1,34 @@
+<div class="given-surveys-container">
+  <div class="header">
+    <h1>My Given Surveys</h1>
+    <p>A history of all feedback protocols you have securely completed.</p>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Retrieving your historical surveys...</p>
+  </div>
+
+  <div class="error-state" *ngIf="error && !loading">
+    <p>{{ error }}</p>
+  </div>
+
+  <div class="survey-list" *ngIf="!loading && !error">
+    
+    <div class="survey-card" *ngFor="let surveyData of completedSurveys">
+      <div class="card-header">
+        <!-- Safely fallback into available schema mappings depending on how mongoose populated -->
+        <h2 class="survey-title">{{ surveyData.surveyId?.surveyName || surveyData.surveyName || 'Unknown Survey' }}</h2>
+        <span class="status-badge">Completed</span>
+      </div>
+      <p class="survey-desc">{{ surveyData.surveyId?.description || surveyData.description || 'No description available for this given survey.' }}</p>
+    </div>
+
+    <div class="empty-state" *ngIf="completedSurveys.length === 0">
+      <div class="icon-placeholder">📄</div>
+      <h3>No Surveys Given Yet</h3>
+      <p>You haven't participated in any active surveys yet. Once you complete surveys, they will appear securely logged here.</p>
+    </div>
+
+  </div>
+</div>

@@ -23,6 +23,10 @@ export class UserService {
     return this.http.get<any>(`${this.apiUrl}/survey/${surveyId}/intro`);
   }
 
+  getGivenSurveys(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/survey`);
+  }
+
   startSurveyTransaction(surveyId: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/survey/${surveyId}/start`, {}, { withCredentials: true });
   }

@@ -9,6 +9,7 @@ import { SurveyIntroComponent } from './features/user/survey-intro/survey-intro.
 import { SurveyLayoutComponent } from './layouts/survey-layout/survey-layout.component';
 import { SurveyDisplayComponent } from './features/user/survey-display/survey-display.component';
 import { AnalysisSurveyComponent } from './features/dashboard/analysis-survey/analysis-survey.component';
+import { GivenSurveysComponent } from './features/user/given-surveys/given-surveys.component';
 
 export const routes: Routes = [
   { 
@@ -19,6 +20,7 @@ export const routes: Routes = [
       { path: 'home', component: CompanyListComponent },
       { path: 'company/:id/surveys', component: CompanySurveysComponent },
       { path: 'survey/:id/intro', component: SurveyIntroComponent },
+      { path: 'my-surveys', component: GivenSurveysComponent },
       { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) }
     ]
   },
