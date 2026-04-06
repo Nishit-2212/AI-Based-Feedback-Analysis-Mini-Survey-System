@@ -8,8 +8,17 @@ import { Observable } from 'rxjs';
 export class CompanyService {
 
   private apiUrl = 'http://localhost:3000/api/company';
+  private analysisUrl = 'http://localhost:3000/api/analysis';
 
   constructor(private http: HttpClient) { }
+
+  getSurveyById(surveyId: string): Observable<any> {
+      return this.http.get(`${this.apiUrl}/surveys/${surveyId}`);
+  }
+
+  getTotalResponses(): Observable<any> {
+      return this.http.get(`${this.analysisUrl}/responses`);
+  }
 
   createSurvey(survey: any): Observable<any> {
       return this.http.post(`${this.apiUrl}/surveys`, { survey })

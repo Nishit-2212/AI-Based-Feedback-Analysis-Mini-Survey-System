@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const answerSchema = new mongoose.Schema({
     questionId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'questions',
+        ref: 'question',
         required: true
     },
     questionKey: {
@@ -60,12 +60,12 @@ Transaction.startSurveyTransaction = async (Survey, surveyId, userId, Question) 
         let allQuestions = [];
 
         if (survey.aiGeneratedQuestions && survey.aiGeneratedQuestions.length > 0) {
-            const aiQuestions = await commanDb.findDB(Question, { questionKey: { $in: survey.aiGeneratedQuestions } });
+            const aiQuestions = await commanDb.findDB(Question, { _id: { $in: survey.aiGeneratedQuestions } });
             allQuestions.push(...aiQuestions);
         }
 
         if (survey.questions && survey.questions.length > 0) {
-            const standardQuestions = await commanDb.findDB(Question, { questionKey: { $in: survey.questions } });
+            const standardQuestions = await commanDb.findDB(Question, { _id: { $in: survey.questions } });
             allQuestions.push(...standardQuestions);
         }
 
@@ -222,8 +222,10 @@ Transaction.getAllSurveyTransactionByCompanyId = async (companyId) => {
 Transaction.getAllResponseBySurveyId = async (surveyId) => {
 
     try {
-        // ::TODO change population after db call
-        const transaction = await commanDb.findDB(Transaction, { surveyId: surveyId }, { userId: 0 }).populate('answers.questionId','questionText questionType');
+        
+        //  const transaction = await commanDb.findDB(Transaction, { surveyId: surveyId }, { userId: 0 }).populate('answers.questionId','questionText questionType');
+        const transaction = await commanDb.findDB(Transaction, { surveyId: surveyId }, { userId: 0 });
+        await Transaction.populate(transaction, { path: 'answers.questionId', select: 'questionText questionType options' });
 
         console.log("all transactions", transaction);
 

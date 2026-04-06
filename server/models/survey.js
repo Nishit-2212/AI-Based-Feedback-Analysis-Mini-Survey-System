@@ -25,13 +25,13 @@ const surveySchema = new mongoose.Schema({
     },
     questions: [
         {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'question'
         }
     ],
     aiGeneratedQuestions: [
         {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'question'
         }
     ],
@@ -85,7 +85,7 @@ Survey.createSurvey = async (data, companyId, Question) => {
                 });
 
                 allQuestionsData.push({ text: question.text, type: question.type });
-                questionIds.push(newQuestion.questionKey);
+                questionIds.push(newQuestion._id);
 
                 await newQuestion.save();
             } else {
@@ -105,7 +105,7 @@ Survey.createSurvey = async (data, companyId, Question) => {
                 });
 
                 allQuestionsData.push({ text: question.text, type: question.type });
-                questionIds.push(newQuestion.questionKey);
+                questionIds.push(newQuestion._id);
 
                 await newQuestion.save();
             }
@@ -137,7 +137,7 @@ Survey.createSurvey = async (data, companyId, Question) => {
                     });
 
                     await newAiQuestion.save();
-                    aiQuestionIds.push(newAiQuestion.questionKey);
+                    aiQuestionIds.push(newAiQuestion._id);
                     console.log('AI Question saved with Key:', newAiQuestion.questionKey);
                 }
 
@@ -248,6 +248,8 @@ Survey.getSurveyIntro = async (surveyId) => {
 Survey.getAllCompanySurveys = async (companyId) => {
     try {
         const surveys = await commanDb.findDB(Survey, { companyId: companyId }, { password: 0 });
+
+
         return {
             statusCode: 200,
             success: true,
@@ -270,9 +272,14 @@ Survey.getAllCompanySurveys = async (companyId) => {
 
 Survey.getCompanySurveyById = async (companyId, surveyId) => {
     try {
-        const surveys = await Survey.findOne({ companyId: new mongoose.Types.ObjectId(companyId), _id: new mongoose.Types.ObjectId(surveyId) }).populate('questions');
+        const survey = await Survey.findOne({ 
+            companyId: new mongoose.Types.ObjectId(companyId), 
+            _id: new mongoose.Types.ObjectId(surveyId) 
+        })
+        .populate('questions')
+        .populate('aiGeneratedQuestions');
 
-        if (!surveys) {
+        if (!survey) {
             return {
                 statusCode: 404,
                 success: false,
@@ -280,19 +287,35 @@ Survey.getCompanySurveyById = async (companyId, surveyId) => {
                 error: {
                     details: "Survey not found with given ID"
                 }
-            }
+            };
         }
+
+        console.log('get Survey by company ', survey);
+
+        // Converting thisinto javascript object so that i can modify it and save it to in the array
+        const finalSurveyData = survey.toObject();
+
+        let allQuestionsCombined = [];
+        
+        if (survey.questions) {
+            allQuestionsCombined = allQuestionsCombined.concat(survey.questions);
+        }
+        
+        if (survey.aiGeneratedQuestions) {
+            allQuestionsCombined = allQuestionsCombined.concat(survey.aiGeneratedQuestions);
+        }
+
+        finalSurveyData.questions = allQuestionsCombined;
 
         return {
             statusCode: 200,
             success: true,
-            message: "You Surveys fetched succesfully",
-            data: surveys
+            message: "Your survey fetched successfully",
+            data: finalSurveyData
         };
 
-    }
-    catch (err) {
-        console.error("Error in fetching surveys:-", err);
+    } catch (err) {
+        console.error("Error in fetching surveys:", err);
         return {
             statusCode: 500,
             success: false,
@@ -302,7 +325,7 @@ Survey.getCompanySurveyById = async (companyId, surveyId) => {
             }
         };
     }
-}
+};
 
 // this is for middleware
 Survey.checkCompanySurveyExist = async (companyId, surveyId) => {

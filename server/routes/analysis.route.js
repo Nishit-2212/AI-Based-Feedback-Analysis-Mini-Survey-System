@@ -14,4 +14,5 @@ router.get('/responses', isAuth, isCompany, transactionController.totalTransacti
 router.get('/response/:surveyId', isAuth, isCompany, isSurveyOwner, transactionController.getAllResponseBySurveyId)
 
 
+
 module.exports = router;

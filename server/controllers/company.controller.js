@@ -63,6 +63,8 @@ const getCompanySurveyById = async (req, res) => {
         console.log('SurveyId', surveyId)
         const result = await Survey.getCompanySurveyById(companyId, surveyId);
 
+        console.log('result', result)
+
         return res.status(result.statusCode).json({
             success: result.success,
             message: result.message,
