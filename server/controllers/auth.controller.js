@@ -245,7 +245,7 @@ const generateNewAccessToken = async (req, res) => {
 
     }
     catch (err) {
-        console.log('Error in generating new Token', err);
+        console.error('Error in generating new Token', err);
         return res.status(400).json({
             success: true,
             message: 'new Access Token is generated',

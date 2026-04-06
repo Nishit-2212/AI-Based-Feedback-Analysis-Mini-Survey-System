@@ -111,7 +111,7 @@ const givenSurvey = async (req, res) => {
 
     }
     catch (err) {
-        console.log('error in get the Survey by userId', err);
+        console.error('error in get the Survey by userId', err);
 
         res.status(500).json({
             success: false,

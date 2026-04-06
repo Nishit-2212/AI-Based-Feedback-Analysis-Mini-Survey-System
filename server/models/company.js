@@ -131,7 +131,7 @@ Company.login = async (data) => {
         }
     }
     catch (err) {
-        console.log("Something goes wrong while login", err);
+        console.error("Something goes wrong while login", err);
         return {
             statusCode: 500,
             success: false,
@@ -145,6 +145,8 @@ Company.login = async (data) => {
 
 Company.getAllCompanies = async () => {
     try {
+
+        // :TODO fetch all company accept innovateMR
         const companies = await commanDb.findDB(Company, {}, { password: 0, createdAt: 0, updatedAt: 0 });
 
         return {

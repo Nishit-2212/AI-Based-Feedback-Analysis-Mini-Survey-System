@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const commanDb = require('../comman/commandb');
 const { v4: uuidv4 } = require('uuid');
+const { generateQuestions } = require('../utils/openaiUtil');
 
 const surveySchema = new mongoose.Schema({
     surveyId: {
@@ -114,8 +115,10 @@ Survey.createSurvey = async (data, companyId, Question) => {
 
         if (textAnalyzer) {
             try {
-                const { generateQuestions } = require('../utils/openaiUtil');
+
                 console.log('TextAnalyzer is on. and generating AI questions.');
+
+                console.log('all question data', allQuestionsData);
 
                 const aiQuestions = await generateQuestions(title, description, allQuestionsData);
                 console.log('AI Questions generated:', aiQuestions);
@@ -400,12 +403,65 @@ Survey.toggleSurveyStatus = async (surveyId) => {
 }
 
 
+Survey.getAllSurveyTransactionByCompanyId = async (companyId) => {
+
+    try {
+
+        const aggregation = [
+            {
+                $match: {
+                    companyId: new mongoose.Types.ObjectId(companyId)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'transactions',
+                    foreignField: 'surveyId',
+                    localField: '_id',
+                    as: 'transactionInfo'
+                }
+            },
+            {
+                $unwind: '$transactionInfo'
+            }
+        ]
+
+        const survey = await commanDb.aggregateDB(Survey, aggregation)
+
+        console.log('TOtal transactions with survey info', survey);
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: 'fetched all given survey',
+            data: survey
+        }
+
+
+    }
+    catch (err) {
+
+        console.error('something went wrong while getting all survey transaction by companyId')
+        return {
+            statusCode: 500,
+            success: false,
+            message: 'Something went wron during fetching survey of given survey',
+            error: {
+                details: err
+            }
+        }
+    }
+
+}
+
+
+
 // Survey.getAllSurveyByUserId = async (surveyId) => {
 
 //     try {
 
-        
-        
+
+
 
 
 

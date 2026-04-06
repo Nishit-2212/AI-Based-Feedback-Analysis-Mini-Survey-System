@@ -112,7 +112,7 @@ User.googleLogin = async (data) => {
             message: "Login sucessful",
         }
     } catch (err) {
-        console.log("Something goes wrong while login", err);
+        console.error("Something goes wrong while login", err);
         return {
             statusCode: 500,
             success: false,
@@ -165,7 +165,7 @@ User.login = async (data) => {
         }
     }
     catch (err) {
-        console.log("Something goes wrong while login", err);
+        console.error("Something goes wrong while login", err);
         return {
             statusCode: 500,
             success: false,

@@ -139,7 +139,7 @@ Question.createQuestion = async (companyId, question) => {
 Question.getAllCommanQuestions = async () => {
 
     try {
-
+        // :TODO change this static companyId
         // in company Id i will be passing adminCompany id which innovateMR@gmail.com 's ID.
         const result = await commanDb.findDB(Question, { companyId: '69ce19ceb56451eec39277d0' }) 
 
@@ -154,7 +154,7 @@ Question.getAllCommanQuestions = async () => {
 
     }
     catch (err) {
-        console.log('error while fetching all questions', err);
+        console.error('error while fetching all questions', err);
 
         return {
             statusCode: 500,

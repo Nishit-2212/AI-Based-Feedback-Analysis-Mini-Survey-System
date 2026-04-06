@@ -51,7 +51,7 @@ const isAuth = (req, res, next) => {
         next();
     }
     catch (err) {
-        console.log('inAuth error', err)
+        console.error('inAuth error', err)
         if (err.name === "TokenExpiredError") {
             return res.status(401).json({
                 error: "Token Expired",

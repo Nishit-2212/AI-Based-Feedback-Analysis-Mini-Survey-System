@@ -70,7 +70,7 @@ const getAllCommanQuestions = async (req, res) => {
 
     }
     catch (err) {
-        console.log('erro while getAllCommanQuestion', err);
+        console.error('erro while getAllCommanQuestion', err);
 
         return res.status(500).json({
             success: false,

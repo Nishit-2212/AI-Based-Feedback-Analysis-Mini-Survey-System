@@ -87,7 +87,8 @@ export class SurveyDisplayComponent implements OnInit {
     }
 
     const payload = {
-      questionKey: this.currentQuestion._id,
+      questionId: this.currentQuestion._id,
+      questionKey: this.currentQuestion.questionKey,
       answer: answer
     };
 
@@ -100,7 +101,7 @@ export class SurveyDisplayComponent implements OnInit {
     survey_answer.push(payload);
     localStorage.setItem(`survey_answer`, JSON.stringify(survey_answer));
 
-    // 4. handle Submit logic
+    // handle Submit logic
     if (this.isLastQuestion) {
       this.submitTransaction(survey_answer);
     } else {
@@ -118,12 +119,16 @@ export class SurveyDisplayComponent implements OnInit {
 
     this.surveyService.submitResponse(finalAnswers, this.transactionId).subscribe({
       next: (res) => {
+
         console.log('response', res);
         console.log('res.success', res.success)
+
       },
       error: (err) => {
+
         alert(err?.error?.message);
         console.log("res.messag", err)
+
       }
     })
 

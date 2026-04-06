@@ -3,8 +3,14 @@ const commanDb = require('../comman/commandb.js');
 const { v4: uuidv4 } = require('uuid');
 
 const answerSchema = new mongoose.Schema({
+    questionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'questions',
+        required: true
+    },
     questionKey: {
-        type: mongoose.Schema.Types.ObjectId
+        type: String,
+        required: true
     },
     answer: [String]
 })
@@ -28,6 +34,7 @@ const transactionSchema = new mongoose.Schema({
 
 
 const Transaction = mongoose.model("transaction", transactionSchema);
+
 
 
 Transaction.startSurveyTransaction = async (Survey, surveyId, userId, Question) => {
@@ -101,6 +108,8 @@ Transaction.submitResponse = async (transactionId, data) => {
             }
         }
 
+        console.log("answers", data)
+
         await commanDb.findOneAndUpdateDB(Transaction, { transactionId: transactionId }, { $set: { answers: data } }, { new: true });
 
         return {
@@ -173,6 +182,71 @@ Transaction.getAllSurveyByUserId = async (userId) => {
             }
         }
     }
+}
+
+
+Transaction.getAllSurveyTransactionByCompanyId = async (companyId) => {
+
+    try {
+
+        const getAllTransactions = await commanDb.findByIdDB(companyId);
+
+        console.log('getAllTransactions', getAllTransactions)
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: 'fetched all transactions',
+            data: getAllTransactions
+        }
+
+
+    }
+    catch (err) {
+
+        console.error('Error in fetching all the transactions in model')
+        return {
+            statusCode: 500,
+            success: false,
+            message: 'Something went wron during fetching survey of given survey',
+            error: {
+                details: err
+            }
+        }
+
+    }
+
+}
+
+
+Transaction.getAllResponseBySurveyId = async (surveyId) => {
+
+    try {
+        // ::TODO change population after db call
+        const transaction = await commanDb.findDB(Transaction, { surveyId: surveyId }, { userId: 0 }).populate('answers.questionId','questionText questionType');
+
+        console.log("all transactions", transaction);
+
+        return {
+            statusCode: 200,
+            success: true,
+            message: 'fetched all the responses',
+            data: transaction
+        }
+
+    }
+    catch (err) {
+        console.error('Something went wrong while fetching all response by surveyId')
+        return {
+            statusCode: 500,
+            success: false,
+            message: 'Something went wrong during fetching survey of given survey',
+            error: {
+                details: err
+            }
+        }
+    }
+
 }
 
 

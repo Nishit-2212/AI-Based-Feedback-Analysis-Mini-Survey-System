@@ -8,49 +8,58 @@ const generateQuestions = async (surveyName, surveyDescription, allQuestions) =>
   try {
     console.log('Generating AI bot detection questions...');
 
-    // Format survey context
-    // const questionsText = allQuestions
-    //   .map((q, i) => `${i + 1}. [${q.type}] ${q.text}`)
-    //   .join('\n');
+    // get all question and put it in one text
+    const questionsText = allQuestions
+      .map((question, i) => `${i + 1}. [${question.type}] ${question.text}`)
+      .join('\n');
 
-    // console.log('questionsText',questionsText);
+    // const questionsText1 = allQuestions.map((question,i) => {
+    //   return `${i+1}. [${question.type}] ${question.text} \n`
+    // })
 
-    // const prompt = `You are an expert in survey design and bot detection.
+
+    console.log('questionsText', questionsText);
+    // console.log('questionText1',questionsText1)
+
+    const prompt = `You are an expert in survey design and bot detection.
     
-    //   Survey Title: "${surveyName}"
-    //   Survey Description: "${surveyDescription}"
+      Survey Title: "${surveyName}"
+      Survey Description: "${surveyDescription}"
 
-    //   Original Survey Questions:
-    //   ${questionsText}
+      Original Survey Questions:
+      ${questionsText}
 
-    //   Your Task: Generate 1 bot detection questions that:
-    //   1. Are related to the survey topic but different from original questions
-    //   2. Help verify if the respondent is a genuine human (not a bot/AI)
-    //   3. Should be natural and not obvious as bot detection questions
-    //   4. must be TEXT (open-ended) type
+      Your Task: Generate 1 bot detection questions that:
+      1. Are related to the survey topic but different from original questions
+      2. Help verify if the respondent is a genuine human (not a bot/AI)
+      3. Should be natural and not obvious as bot detection questions
+      4. must be TEXT (open-ended) type
 
-    //   Return ONLY a valid JSON array, nothing else:
-    //   [
-    //     {
-    //       "text": "Question text here?",
-    //       "type": "TEXT"
-    //     }
-    //   ]`;
+      Return ONLY a valid JSON array, nothing else:
+      [
+        {
+          "text": "Question text here?",
+          "type": "TEXT"
+        }
+      ]`;
 
-    // const response = await client.responses.create({
-    //   model: "gpt-3.5-turbo",
-    //   messages: [{ role: "user", content: prompt }],
-    //   max_tokens: 500
-    // });
+    const response = await client.responses.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 500
+    });
 
-    // const jsonText = response.choices[0].message.content.trim();
-    // console.log('AI Response:', jsonText);
+    console.log('responses', response);
 
-    // const questions = JSON.parse(jsonText);
-    // console.log('Parsed questions:', questions);
+    const jsonText = response.choices[0].message.content.trim();
+    console.log('AI Response:', jsonText);
 
-    // return questions;
-  } catch (error) {
+    const questions = JSON.parse(jsonText);
+    console.log('Parsed questions:', questions);
+
+    return questions;
+  }
+  catch (error) {
     console.error("Error generating bot detection questions:", error);
     throw error;
   }
