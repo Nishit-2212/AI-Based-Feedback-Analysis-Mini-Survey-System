@@ -6,14 +6,16 @@
 
   <div class="user-profile" [ngClass]="{'compact': isCollapsed}">
     <div class="avatar">
-      <img src="https://ui-avatars.com/api/?name=Company+Admin&background=CCFF90&color=000&font-weight=600" alt="Avatar">
+      <img src="https://ui-avatars.com/api/?name=Company+Admin&background=CCFF90&color=000&font-weight=600"
+        alt="Avatar">
     </div>
     <span class="user-name" *ngIf="!isCollapsed">Company Admin</span>
     <i class="dropdown-icon" *ngIf="!isCollapsed">⌄</i>
   </div>
 
   <nav class="sidebar-nav">
-    <a routerLink="/dashboard" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" title="Home">
+    <a routerLink="/dashboard" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+      title="Home">
       <i class="icon">⌂</i> <span class="nav-text" *ngIf="!isCollapsed">Home</span>
     </a>
     <a routerLink="/dashboard/surveys/new" class="nav-item" routerLinkActive="active" title="Create Survey">
@@ -25,11 +27,12 @@
     <a routerLink="/dashboard/ai" class="nav-item" routerLinkActive="active" title="AI">
       <i class="icon">✨</i> <span class="nav-text" *ngIf="!isCollapsed">AI</span>
     </a>
-    
+
     <div class="nav-divider"></div>
 
-    <a routerLink="/dashboard/feedback" class="nav-item" routerLinkActive="active" title="Feedbacks">
-      <i class="icon">📝</i> <span class="nav-text" *ngIf="!isCollapsed">LogOut</span>
+    <a class="nav-item" routerLinkActive="active" title="Feedbacks">
+      <i class="icon">📝</i>
+      <span class="nav-text" *ngIf="!isCollapsed" (click)="logout()">LogOut</span>
     </a>
   </nav>
 </aside>

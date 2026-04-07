@@ -2,7 +2,6 @@
   
   <div class="header">
     <h1>All Surveys Overview</h1>
-    <p>Monitor your active campaigns and survey elements globally.</p>
   </div>
 
   <!-- Metric Cards -->
@@ -58,22 +57,16 @@
     <div class="detail-column">
       
       <!-- Placeholder when nothing is selected -->
-      <div class="empty-detail" *ngIf="!selectedSurvey && !loadingDetails">
+      <div class="empty-detail" *ngIf="!selectedSurvey">
         <div class="icon-placeholder">←</div>
-        <p>Select a survey from the directory to view its exact architecture and questions.</p>
-      </div>
-
-      <!-- Loading State -->
-      <div class="loading-state" *ngIf="loadingDetails">
-        <div class="spinner"></div>
-        <p>Loading Survey Protocol...</p>
+        <p>Select a survey to get analysis.</p>
       </div>
 
       <!-- Detail View of Selected Survey -->
-      <div class="survey-details" *ngIf="selectedSurvey && !loadingDetails">
+      <div class="survey-details" *ngIf="selectedSurvey">
         <div class="detail-header">
           <h2>{{ selectedSurvey.surveyName }}</h2>
-          <span class="badge detail-badge">Survey Anatomy</span>
+          <span class="badge detail-badge">Total Responses:- {{totalResponseOnSelectedSurvey}}</span>
         </div>
         <p class="detail-desc">{{ selectedSurvey.description }}</p>
 

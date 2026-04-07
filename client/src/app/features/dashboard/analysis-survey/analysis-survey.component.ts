@@ -17,8 +17,9 @@ export class AnalysisSurveyComponent implements OnInit {
   totalSurveys: number = 0;
   totalResponses: number = 0;
 
+  totalResponseOnSelectedSurvey: number = 0;
+
   selectedSurvey: any = null;
-  loadingDetails: boolean = false;
 
   Highcharts: typeof Highcharts = Highcharts;
   chartOptionsMap: { [key: string]: Highcharts.Options } = {};
@@ -35,6 +36,7 @@ export class AnalysisSurveyComponent implements OnInit {
       next: (res: any) => {
         if (res.success && res.data) {
           this.totalResponses = Array.isArray(res.data) ? res.data.length : (res.data || 0);
+          console.log('totalResponse',this.totalResponses)
         }
       },
       error: (err) => console.error("Error fetching total responses", err)
@@ -54,7 +56,7 @@ export class AnalysisSurveyComponent implements OnInit {
   }
 
   selectSurvey(survey: any) {
-    this.loadingDetails = true;
+    
     this.selectedSurvey = null; // Reset selection state
     this.chartOptionsMap = {};
     
@@ -67,9 +69,6 @@ export class AnalysisSurveyComponent implements OnInit {
         }
       },
       error: (err) => console.error("Error fetching survey details", err),
-      complete: () => {
-        this.loadingDetails = false;
-      }
     });
   }
 
@@ -78,6 +77,8 @@ export class AnalysisSurveyComponent implements OnInit {
           next: (res: any) => {
               if (res.success && res.data) {
                   this.processChartData(this.selectedSurvey.questions || [], res.data);
+                  console.log('total response on selected survey is',res.data.length)
+                  this.totalResponseOnSelectedSurvey = res.data.length;
               }
           },
           error: (err) => console.error("Error fetching survey responses:", err)

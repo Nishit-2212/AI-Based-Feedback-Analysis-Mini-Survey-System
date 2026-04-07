@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,6 +11,9 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
+
+  constructor(private sharedService: SharedService, private router: Router) { }
+
   isCollapsed = false;
   @Output() toggleSidebarEvent = new EventEmitter<boolean>();
 
@@ -17,4 +21,22 @@ export class SidebarComponent {
     this.isCollapsed = !this.isCollapsed;
     this.toggleSidebarEvent.emit(this.isCollapsed);
   }
+
+
+  logout() {
+    this.sharedService.logOut().subscribe({
+      next: (res: any) => {
+        if (res.success) {
+
+          console.log('Logout button clicked');
+          this.router.navigateByUrl('/auth/company-login')
+          alert("Logout succesful.");
+        }
+      },
+      error: () => {
+        console.log('Something goes wrong in navbar component');
+      }
+    })
+  }
+
 }

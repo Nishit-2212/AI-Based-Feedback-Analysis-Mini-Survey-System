@@ -3,13 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { company } from '../models/company.model';
 import { user } from '../models/user.model';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = environment.API_URL+'/auth';
+  // private apiUrl = 'http://localhost:3000/api/auth';
 
   constructor(private http: HttpClient) { }
 
@@ -32,4 +34,5 @@ export class AuthService {
   companyLogin(Company: company): Observable<any> {
     return this.http.post(`${this.apiUrl}/company/login`,Company,  { withCredentials: true })
   }
+  
 }

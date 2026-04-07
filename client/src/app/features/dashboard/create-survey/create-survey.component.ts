@@ -27,7 +27,7 @@ export class CreateSurveyComponent implements OnInit {
     });
     
     // By default one question added
-    this.addQuestion('MCQ');
+    // this.addQuestion('MCQ');
   }
 
   ngOnInit(): void {

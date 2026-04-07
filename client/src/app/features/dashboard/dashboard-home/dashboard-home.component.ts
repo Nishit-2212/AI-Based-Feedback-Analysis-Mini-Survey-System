@@ -59,4 +59,5 @@ export class DashboardHomeComponent implements OnInit {
         error: (err) => console.error('Error deleting survey:', err)
       });
   }
+  
 }
