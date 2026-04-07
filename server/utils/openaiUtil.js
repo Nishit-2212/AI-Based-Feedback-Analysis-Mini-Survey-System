@@ -4,9 +4,9 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-const generateQuestions = async (surveyName, surveyDescription, allQuestions) => {
+const generateQuestions = async (surveyName, surveyDescription, allQuestions, keyword) => {
   try {
-    console.log('Generating AI bot detection questions...');
+    console.log('Generating AI keyword text analyzer definition...', keyword ? `(Target Keyword: ${keyword})` : '');
 
     // get all question and put it in one text
     const questionsText = allQuestions
@@ -19,45 +19,23 @@ const generateQuestions = async (surveyName, surveyDescription, allQuestions) =>
 
 
     console.log('questionsText', questionsText);
-    // console.log('questionText1',questionsText1)
-
-    // const prompt = `You are an expert in survey design and bot detection.
-
-    //   Survey Title: "${surveyName}"
-    //   Survey Description: "${surveyDescription}"
-
-    //   Original Survey Questions:
-    //   ${questionsText}
-
-    //   Your Task: Generate 1 open ended bot detection question that:
-    //   1. Are related to the survey topic but different from original questions
-    //   2. Help verify if the respondent is a genuine human (not a bot/AI)
-    //   3. Should be natural and not obvious as bot detection questions
-    //   4. must be TEXT (open-ended) type
-
-    //   Return ONLY a valid JSON array, nothing else:
-    //   [
-    //     {
-    //       "text": "Question text here?",
-    //       "type": "TEXT"
-    //     }
-    //   ]`;
+    
 
 
     const prompt = `You are an expert in creating question.
 
         Survey Title: ${surveyName}  
-        Survey Description: ${surveyDescription}  
-        Existing Questions: ${questionsText}
+        Survey Description: ${surveyDescription}
+        Target Keyword: "${keyword || 'General Bot Detection'}"
 
         Task:
-        Generate ONE insightful open-ended question that helps identify genuine and thoughtful respondents based on the quality of their answer.
+        Generate ONE insightful open-ended question that heavily targets the exact Target Keyword provided.
+        This question should still organically fit into the overarching theme of the Survey Title and Description.
         
-
         Requirements:
-        - The question must be relevant to the survey context.
+        - The question MUST dynamically incorporate or explicitly target the concept of the Target Keyword: "${keyword || 'General context'}".
         - It should encourage detailed, meaningful responses (not yes/no).
-        - It should help differentiate serious users from low-effort responses.
+        - It should verify genuine human thought around the keyword context.
 
         Output Format:
         Return ONLY a valid JSON array, with no extra text or explanation.
@@ -70,16 +48,16 @@ const generateQuestions = async (surveyName, surveyDescription, allQuestions) =>
         ]`
 
 
-    // const response = await client.responses.create({
-    //   model: "gpt-4-o", use gpt-4-o
-    //   input: [
-    //     {
-    //       role: "user",
-    //       content: prompt
-    //     }
-    //   ],
-    //   max_output_tokens: 800
-    // });
+    const response = await client.responses.create({
+      model: "gpt-4-o", 
+      input: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      max_output_tokens: 800
+    });
 
     console.log('responses', response);
 

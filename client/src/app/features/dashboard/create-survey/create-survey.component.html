@@ -31,6 +31,12 @@
             <p>Automatically generate hidden AI questions to verify genuine users.</p>
           </div>
         </div>
+
+        <div class="form-group" *ngIf="surveyForm.get('textAnalyzer')?.value" style="margin-top: 12px; padding-left: 20px; border-left: 3px solid var(--primary-color);">
+          <label>Keyword</label>
+          <input type="text" formControlName="textAnalyzerKeyword" placeholder="e.g. specific product, brand, or focus area" class="input-field" style="max-width: 300px;">
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">AI will generate a targeted response prompt based exactly on this context.</p>
+        </div>
       </div>
 
       <!-- Questions Dynamic Form Array -->

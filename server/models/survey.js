@@ -23,6 +23,10 @@ const surveySchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    textAnalyzerKeyword: {
+        type: String,
+        default: ""
+    },
     questions: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -52,7 +56,7 @@ const Survey = mongoose.model("survey", surveySchema);
 Survey.createSurvey = async (data, companyId, Question) => {
     try {
         console.log('inner create survey data', data);
-        const { title, description, textAnalyzer } = data;
+        const { title, description, textAnalyzer, textAnalyzerKeyword } = data;
 
         const nextId = await commanDb.getNextSequence(Survey.modelName);
         const surveyIdLink = uuidv4();
@@ -63,7 +67,8 @@ Survey.createSurvey = async (data, companyId, Question) => {
             companyId: companyId,
             surveyId: nextId,
             surveyLink: surveyIdLink,
-            textAnalyzer: textAnalyzer
+            textAnalyzer: textAnalyzer,
+            textAnalyzerKeyword: textAnalyzerKeyword || ""
         })
 
         await newSurvey.save();
@@ -120,7 +125,7 @@ Survey.createSurvey = async (data, companyId, Question) => {
 
                 console.log('all question data', allQuestionsData);
 
-                const aiQuestions = await generateQuestions(title, description, allQuestionsData);
+                const aiQuestions = await generateQuestions(title, description, allQuestionsData, textAnalyzerKeyword);
                 console.log('AI Questions generated:', aiQuestions);
 
                 const aiQuestionIds = [];

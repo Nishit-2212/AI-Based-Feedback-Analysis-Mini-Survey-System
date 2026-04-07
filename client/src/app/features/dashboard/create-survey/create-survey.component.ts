@@ -24,6 +24,7 @@ export class CreateSurveyComponent implements OnInit {
       title: ['', Validators.required],
       description: ['', Validators.required],
       textAnalyzer: [false],
+      textAnalyzerKeyword: [''],
       questions: this.fb.array([])
     });
 
