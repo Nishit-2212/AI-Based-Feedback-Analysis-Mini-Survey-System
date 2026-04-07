@@ -1,5 +1,5 @@
 <div class="analysis-container">
-  
+
   <div class="header">
     <h1>All Surveys Overview</h1>
   </div>
@@ -24,16 +24,14 @@
 
   <!-- Master-Detail Layout -->
   <div class="master-detail-layout">
-    
+
     <!-- Left Column: Survey List -->
     <div class="list-column">
       <h2>Survey Directory</h2>
       <div class="survey-list">
-        
-        <div class="survey-card" 
-             *ngFor="let survey of surveys" 
-             [class.active]="selectedSurvey && selectedSurvey._id === survey._id"
-             (click)="selectSurvey(survey)">
+
+        <div class="survey-card" *ngFor="let survey of surveys"
+          [class.active]="selectedSurvey && selectedSurvey._id === survey._id" (click)="selectSurvey(survey)">
           <div class="card-header">
             <h4>{{ survey.surveyName }}</h4>
             <span class="status-badge" [ngClass]="survey.isActive ? 'active' : 'inactive'">
@@ -55,7 +53,7 @@
 
     <!-- Right Column: Detail View -->
     <div class="detail-column">
-      
+
       <!-- Placeholder when nothing is selected -->
       <div class="empty-detail" *ngIf="!selectedSurvey">
         <div class="icon-placeholder">←</div>
@@ -72,7 +70,7 @@
 
         <div class="questions-blueprint">
           <h3>Included Questions ({{ selectedSurvey.questions?.length || 0 }})</h3>
-          
+
           <div class="question-item" *ngFor="let q of selectedSurvey.questions; let i = index">
             <div class="q-header">
               <span class="q-number">Q{{ i + 1 }}</span>
@@ -80,14 +78,13 @@
               <span class="q-ai badge ai" *ngIf="q.isAiGenerated">✨ AI Generated</span>
             </div>
             <p class="q-text">{{ q.questionText }}</p>
-            
+
             <div class="q-options" *ngIf="q.questionType !== 'TEXT' && q.options && q.options.length">
               <ul>
                 <li *ngFor="let opt of q.options">{{ opt }}</li>
               </ul>
               <div class="chart-container" *ngIf="chartOptionsMap[q._id]" style="margin-top: 24px;">
-                <highcharts-chart 
-                  [options]="chartOptionsMap[q._id]"
+                <highcharts-chart [options]="chartOptionsMap[q._id]"
                   style="width: 100%; height: 350px; display: block; overflow: hidden;">
                 </highcharts-chart>
               </div>

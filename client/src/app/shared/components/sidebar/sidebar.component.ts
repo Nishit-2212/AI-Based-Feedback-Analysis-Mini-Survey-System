@@ -29,7 +29,7 @@ export class SidebarComponent {
         if (res.success) {
 
           console.log('Logout button clicked');
-          this.router.navigateByUrl('/auth/company-login')
+          this.router.navigateByUrl('/auth/company-login',{ replaceUrl: true })
           alert("Logout succesful.");
         }
       },

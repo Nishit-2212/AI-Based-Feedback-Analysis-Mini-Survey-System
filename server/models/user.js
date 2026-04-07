@@ -53,7 +53,7 @@ User.signUp = async (data) => {
             return {
                 statusCode: 400,
                 success: false,
-                message: "Email already exist please login",
+                message: "Email already exist please login with different mail",
             };
         }
 
@@ -81,7 +81,7 @@ User.signUp = async (data) => {
         return {
             statusCode: 500,
             success: false,
-            message: "SignedUp unsuccesful",
+            message: "SignedUp unsuccesful something went wrong",
             error: {
                 details: err
             }
@@ -186,7 +186,7 @@ User.getUserById = async (id) => {
             message: "User fetched succesfully",
             data: user
         };
-    } 
+    }
     catch (err) {
         console.error("Error in fetching User:-", err);
         return {
@@ -212,7 +212,7 @@ User.getAllUser = async () => {
             message: 'All user fetched successfully',
             data: result
         }
-        
+
 
     }
     catch (err) {

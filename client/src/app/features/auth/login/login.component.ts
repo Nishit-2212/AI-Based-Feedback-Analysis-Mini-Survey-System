@@ -39,8 +39,6 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl('/home', { replaceUrl: true });
             return;
           }
-
-
         },
         error: (err) => {
           alert(err?.error?.message);

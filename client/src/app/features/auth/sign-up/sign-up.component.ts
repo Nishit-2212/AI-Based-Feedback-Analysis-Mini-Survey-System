@@ -13,19 +13,32 @@ import { user } from '../../../models/user.model';
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent {
-  
-  constructor(private authService:AuthService, private router: Router) {}
+
+  constructor(private authService: AuthService, private router: Router) { }
 
   User: user | undefined;
 
-  onSubmit(val:NgForm) {
-    
+  onSubmit(val: NgForm) {
+
     this.User = val.value;
-    console.log('User ',this.User);
-    
-    if(this.User) {
-      this.authService.userSignup(this.User).subscribe((res) => {
-        console.log('response',res);
+    console.log('User ', this.User);
+
+    if (this.User) {
+      this.authService.userSignup(this.User).subscribe({
+        next: (res) => {
+          console.log('response', res);
+          console.log('res.success', res.success)
+
+          if (res?.success) {
+            alert(res?.message);
+            this.router.navigateByUrl('/auth/login', { replaceUrl: true });
+            return;
+          }
+        },
+        error: (err) => {
+          alert(err?.error?.message);
+          console.log("res.messag", err)
+        }
       })
     }
   }

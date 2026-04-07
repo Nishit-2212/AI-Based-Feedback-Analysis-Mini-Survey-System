@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CompanyService } from '../../../services/company.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-survey',
@@ -18,14 +19,14 @@ export class CreateSurveyComponent implements OnInit {
   isModalOpen: boolean = false;
   modalMode: 'PAST' | 'COMMON' = 'PAST';
 
-  constructor(private fb: FormBuilder, private companyService:CompanyService) {
+  constructor(private fb: FormBuilder, private companyService: CompanyService, private router: Router) {
     this.surveyForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       textAnalyzer: [false],
       questions: this.fb.array([])
     });
-    
+
     // By default one question added
     // this.addQuestion('MCQ');
   }
@@ -89,8 +90,8 @@ export class CreateSurveyComponent implements OnInit {
         optionsArray.push(this.fb.group({ value: [opt, Validators.required] }));
       }
     } else if (question.questionType !== 'TEXT') {
-        optionsArray.push(this.fb.group({ value: ['', Validators.required] }));
-        optionsArray.push(this.fb.group({ value: ['', Validators.required] }));
+      optionsArray.push(this.fb.group({ value: ['', Validators.required] }));
+      optionsArray.push(this.fb.group({ value: ['', Validators.required] }));
     }
 
     this.questions.push(questionGroup);
@@ -135,14 +136,27 @@ export class CreateSurveyComponent implements OnInit {
   onSubmit() {
     if (this.surveyForm.valid) {
       console.log('Survey Final JSON Payload:', this.surveyForm.value);
-      this.companyService.createSurvey(this.surveyForm.value).subscribe((res) => {
-        // :TODO handle response
-        console.log('response',res);
-      });
-      alert('Survey Created Successfully!');
+      this.companyService.createSurvey(this.surveyForm.value).subscribe({
+        next: (res) => {
+          console.log('response', res);
+          console.log('res.success', res.success)
+
+          if (res?.success) {
+            alert(res?.message);
+            this.router.navigateByUrl('/dashboard', { replaceUrl: true });
+            return;
+          }
+        },
+        error: (err) => {
+          alert(err?.error?.message);
+          console.log("res.messag", err)
+        }
+      })
     } else {
       this.surveyForm.markAllAsTouched();
       alert('Please fill out all required fields before submitting.');
     }
   }
 }
+
+

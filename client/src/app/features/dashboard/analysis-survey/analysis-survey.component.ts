@@ -24,7 +24,7 @@ export class AnalysisSurveyComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   chartOptionsMap: { [key: string]: Highcharts.Options } = {};
 
-  constructor(private companyService: CompanyService) {}
+  constructor(private companyService: CompanyService) { }
 
   ngOnInit(): void {
     this.fetchMetrics();
@@ -36,7 +36,7 @@ export class AnalysisSurveyComponent implements OnInit {
       next: (res: any) => {
         if (res.success && res.data) {
           this.totalResponses = Array.isArray(res.data) ? res.data.length : (res.data || 0);
-          console.log('totalResponse',this.totalResponses)
+          console.log('totalResponse', this.totalResponses)
         }
       },
       error: (err) => console.error("Error fetching total responses", err)
@@ -56,10 +56,10 @@ export class AnalysisSurveyComponent implements OnInit {
   }
 
   selectSurvey(survey: any) {
-    
+
     this.selectedSurvey = null; // Reset selection state
     this.chartOptionsMap = {};
-    
+
     // Fetch survey natively, populating 'questions' array
     this.companyService.getSurveyById(survey._id).subscribe({
       next: (res: any) => {
@@ -73,79 +73,79 @@ export class AnalysisSurveyComponent implements OnInit {
   }
 
   fetchAndProcessResponses(surveyId: string) {
-      this.companyService.getSurveyResponses(surveyId).subscribe({
-          next: (res: any) => {
-              if (res.success && res.data) {
-                  this.processChartData(this.selectedSurvey.questions || [], res.data);
-                  console.log('total response on selected survey is',res.data.length)
-                  this.totalResponseOnSelectedSurvey = res.data.length;
-              }
-          },
-          error: (err) => console.error("Error fetching survey responses:", err)
-      });
+    this.companyService.getSurveyResponses(surveyId).subscribe({
+      next: (res: any) => {
+        if (res.success && res.data) {
+          this.processChartData(this.selectedSurvey.questions || [], res.data);
+          console.log('total response on selected survey is', res.data.length)
+          this.totalResponseOnSelectedSurvey = res.data.length;
+        }
+      },
+      error: (err) => console.error("Error fetching survey responses:", err)
+    });
   }
 
   processChartData(questions: any[], responses: any[]) {
-      questions.forEach((q: any) => {
-          if (q.questionType === 'MCQ' || q.questionType === 'MULTIPLE') {
-              
-              // Map options to zero frequencies
-              const answerCounts: { [key: string]: number } = {};
-              if (q.options) {
-                  q.options.forEach((opt: string) => answerCounts[opt] = 0);
+    questions.forEach((q: any) => {
+      if (q.questionType === 'MCQ' || q.questionType === 'MULTIPLE') {
+
+        // Map options to zero frequencies
+        const answerCounts: { [key: string]: number } = {};
+        if (q.options) {
+          q.options.forEach((opt: string) => answerCounts[opt] = 0);
+        }
+
+        // Loop through raw responses to build the exact aggregates
+        responses.forEach((session: any) => {
+          const match = session.answers.find((ans: any) => ans.questionKey === q.questionKey);
+          if (match && match.answer) {
+            match.answer.forEach((selectedOpt: string) => {
+              if (answerCounts[selectedOpt] !== undefined) {
+                answerCounts[selectedOpt]++;
+              } else {
+                answerCounts[selectedOpt] = 1;
               }
-
-              // Loop through raw responses to build the exact aggregates
-              responses.forEach((session: any) => {
-                  const match = session.answers.find((ans: any) => ans.questionKey === q.questionKey);
-                  if (match && match.answer) {
-                      match.answer.forEach((selectedOpt: string) => {
-                          if (answerCounts[selectedOpt] !== undefined) {
-                              answerCounts[selectedOpt]++;
-                          } else {
-                              answerCounts[selectedOpt] = 1;
-                          }
-                      });
-                  }
-              });
-
-              // Format securely into Highcharts standard formatting
-              const seriesData = Object.keys(answerCounts).map(opt => ({
-                  name: opt,
-                  y: answerCounts[opt]
-              }));
-
-              this.chartOptionsMap[q._id] = {
-                  chart: {
-                      type: 'pie',
-                      zooming: { type: 'xy' },
-                      panning: { enabled: true, type: 'xy' }
-                  },
-                  title: { text: 'Audience Response Data' },
-                  tooltip: {
-                      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y})'
-                  },
-                  plotOptions: {
-                      pie: {
-                          allowPointSelect: true,
-                          cursor: 'pointer',
-                          dataLabels: [{ enabled: true, distance: 20 }, {
-                              enabled: true,
-                              distance: -40,
-                              format: '{point.percentage:.1f}%',
-                              style: { fontSize: '1.2em', textOutline: 'none', opacity: 0.7 }
-                          }]
-                      }
-                  },
-                  series: [{
-                      type: 'pie',
-                      name: 'Selections',
-                      colorByPoint: true,
-                      data: seriesData
-                  }]
-              } as any;
+            });
           }
-      });
+        });
+
+        // Format securely into Highcharts standard formatting
+        const seriesData = Object.keys(answerCounts).map(opt => ({
+          name: opt,
+          y: answerCounts[opt]
+        }));
+
+        this.chartOptionsMap[q._id] = {
+          chart: {
+            type: 'pie',
+            zooming: { type: 'xy' },
+            panning: { enabled: true, type: 'xy' }
+          },
+          title: { text: 'Audience Response Data' },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y})'
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: [{ enabled: true, distance: 20 }, {
+                enabled: true,
+                distance: -40,
+                format: '{point.percentage:.1f}%',
+                style: { fontSize: '1.2em', textOutline: 'none', opacity: 0.7 }
+              }]
+            }
+          },
+          series: [{
+            type: 'pie',
+            name: 'Selections',
+            colorByPoint: true,
+            data: seriesData
+          }]
+        } as any;
+      }
+    });
   }
 
 }
