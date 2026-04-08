@@ -322,7 +322,7 @@ const getUserFromRefreshToken = async (refreshToken) => {
 
 const getUserFromAccessToken = async (accessToken) => {
 
-    const secretKey = proccess.env.ACCESS_TOKEN_SECRET;
+    const secretKey = process.env.ACCESS_TOKEN_SECRET || "jnjnmjnmbVF345";
 
     try {
 
@@ -342,7 +342,7 @@ const getUserFromAccessToken = async (accessToken) => {
 
 
 
-const getUserInfo = async () => {
+const getUserInfo = async (req, res) => {
 
     try {
         const accessToken = req.cookies.accessToken || null;

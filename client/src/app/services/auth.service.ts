@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { company } from '../models/company.model';
@@ -11,9 +11,15 @@ import { environment } from '../../environments/environment.development';
 export class AuthService {
 
   private apiUrl = environment.API_URL+'/auth';
-  // private apiUrl = 'http://localhost:3000/api/auth';
+
+  // Global Reactive User Signal
+  currentUser = signal<{ isLoggedIn: boolean; username: string }>({ isLoggedIn: false, username: '' });
 
   constructor(private http: HttpClient) { }
+
+  updateAuthSignal(isLoggedIn: boolean, username: string = '') {
+    this.currentUser.set({ isLoggedIn, username });
+  }
 
   googleSignIn(code: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/google`, { code }, { withCredentials: true });
@@ -35,4 +41,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/company/login`,Company,  { withCredentials: true })
   }
   
+  getUserInfo(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/me`, { withCredentials: true })
+  }
 }

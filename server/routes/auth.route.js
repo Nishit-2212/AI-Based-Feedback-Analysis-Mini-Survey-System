@@ -19,7 +19,7 @@ route.post('/generateToken', authController.generateNewAccessToken);
 
 route.post('/logout', authController.logOut);
 
-// route.get('/me', authController.getUserInfo);
+route.get('/me', authController.getUserInfo);
 
 
 module.exports = route;

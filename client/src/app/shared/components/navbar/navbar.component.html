@@ -2,7 +2,7 @@
   <div class="navbar-container">
     <div class="navbar-left">
       <a routerLink="/" class="logo">PIXLS</a>
-      <ul class="nav-links">
+      <ul class="nav-links" *ngIf="authSignal().isLoggedIn">
         <li><a routerLink="/home" class="nav-link active">Home</a></li>
         <li><a routerLink="/about" class="nav-link">About</a></li>
         <li><a routerLink="/forum" class="nav-link">Forum</a></li>
@@ -24,9 +24,15 @@
       </div>
     </div>
 
-    <div class="navbar-right" style="gap: 12px;">
+    <div class="navbar-right" style="gap: 12px;" *ngIf="!authSignal().isLoggedIn">
       <button class="btn-primary" routerLink="/auth/login">Login</button>
       <button class="btn-secondary" routerLink="/auth/register-company">Register Company</button>
+    </div>
+
+    <!-- Logged in state dropdown/username display -->
+    <div class="navbar-right" style="gap: 16px;" *ngIf="authSignal().isLoggedIn">
+      <span class="nav-link" style="font-weight: 600;">Welcome, {{ authSignal().username }}</span>
+      <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" (click)="logout()">Logout</button>
     </div>
   </div>
 </nav>

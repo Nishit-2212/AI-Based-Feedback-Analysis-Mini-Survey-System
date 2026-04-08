@@ -59,5 +59,27 @@ export class DashboardHomeComponent implements OnInit {
         error: (err) => console.error('Error deleting survey:', err)
       });
   }
-  
+
+  copyToClipboard(url: string) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Survey Link copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    } else {
+      // Fallback
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('Survey Link copied to clipboard!');
+      } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+      }
+      document.body.removeChild(textArea);
+    }
+  }
 }

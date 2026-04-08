@@ -9,7 +9,8 @@ const generateAccessToken = (userData, role) => {
     return jwt.sign(
         {
             id: userData._id,
-            role: userData.role
+            role: userData.role,
+            userName: userData.userName || userData.companyName
         },
         process.env.ACCESS_TOKEN_SECRET || "jnjnmjnmbVF345",
         { expiresIn: "1d" }

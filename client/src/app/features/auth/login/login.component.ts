@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
 
           if (res?.success) {
             alert(res?.message);
+            this.authService.updateAuthSignal(true, res.data?.userName || res.data?.companyName);
             this.router.navigateByUrl('/home', { replaceUrl: true });
             return;
           }
@@ -73,6 +74,7 @@ export class LoginComponent implements OnInit {
         console.log('Login Successful');
         if (res?.success) {
           alert(res?.message);
+          this.authService.updateAuthSignal(true, res.data?.userName || res.data?.companyName);
           this.router.navigateByUrl('/home', { replaceUrl: true });
           return;
         }
