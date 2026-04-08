@@ -158,7 +158,7 @@ const getAllCommanQuestions = async (req, res) => {
 
         const result = await Question.getAllCommanQuestions();
 
-        console.log("Result in controller",result);
+        console.log("Result in controller", result);
 
         return res.status(result.statusCode).json({
             success: result.success,

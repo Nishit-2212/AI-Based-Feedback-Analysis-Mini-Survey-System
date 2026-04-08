@@ -5,10 +5,10 @@
   </div>
 
   <form [formGroup]="surveyForm" class="builder-layout">
-    
+
     <!-- Left Column: Survey Details & Questions list -->
     <div class="main-column">
-      
+
       <!-- Survey Details Card -->
       <div class="card details-card">
         <h2>Survey Details</h2>
@@ -18,7 +18,8 @@
         </div>
         <div class="form-group">
           <label>Description</label>
-          <textarea formControlName="description" placeholder="Briefly describe what this survey is mapping..." class="input-field textarea-field"></textarea>
+          <textarea formControlName="description" placeholder="Briefly describe what this survey is mapping..."
+            class="input-field textarea-field"></textarea>
         </div>
 
         <div class="form-group toggle-group">
@@ -32,10 +33,13 @@
           </div>
         </div>
 
-        <div class="form-group" *ngIf="surveyForm.get('textAnalyzer')?.value" style="margin-top: 12px; padding-left: 20px; border-left: 3px solid var(--primary-color);">
+        <div class="form-group" *ngIf="surveyForm.get('textAnalyzer')?.value"
+          style="margin-top: 12px; padding-left: 20px; border-left: 3px solid var(--primary-color);">
           <label>Keyword</label>
-          <input type="text" formControlName="textAnalyzerKeyword" placeholder="e.g. specific product, brand, or focus area" class="input-field" style="max-width: 300px;">
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">AI will generate a targeted response prompt based exactly on this context.</p>
+          <input type="text" formControlName="textAnalyzerKeyword" placeholder="e.g. particullar focus area"
+            class="input-field" style="max-width: 300px;">
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">AI will generate a targeted response
+            prompt based exactly on this context.</p>
         </div>
       </div>
 
@@ -46,14 +50,16 @@
             <h3>Question {{ i + 1 }} <span class="badge">{{ q.get('type')?.value }}</span></h3>
             <button class="btn-icon danger" (click)="removeQuestion(i)" title="Delete Question">🗑</button>
           </div>
-          
-          <input type="text" formControlName="text" placeholder="Type your question prompt here..." class="input-field question-title-input">
+
+          <input type="text" formControlName="text" placeholder="Type your question prompt here..."
+            class="input-field question-title-input">
 
           <!-- Options mapping (for MCQ and Multiple Choice) -->
           <div *ngIf="q.get('type')?.value !== 'TEXT'" formArrayName="options" class="options-container">
             <div *ngFor="let opt of getOptions(i).controls; let j=index" [formGroupName]="j" class="option-row">
               <span class="option-marker">{{ q.get('type')?.value === 'MCQ' ? '○' : '☐' }}</span>
-              <input type="text" formControlName="value" placeholder="Option {{j + 1}}" class="input-field option-input">
+              <input type="text" formControlName="value" placeholder="Option {{j + 1}}"
+                class="input-field option-input">
               <button class="btn-icon outline" (click)="removeOption(i, j)" *ngIf="getOptions(i).length > 1">✕</button>
             </div>
             <button type="button" class="btn-text" (click)="addOption(i)">+ Add Option</button>
@@ -61,7 +67,8 @@
 
           <!-- Open Ended Preview -->
           <div *ngIf="q.get('type')?.value === 'TEXT'" class="open-ended-preview">
-            <textarea disabled placeholder="Respondents will type out a long-form answer here..." class="input-field textarea-field preview"></textarea>
+            <textarea disabled placeholder="Respondents will type out a long-form answer here..."
+              class="input-field textarea-field preview"></textarea>
           </div>
 
         </div>
@@ -104,11 +111,13 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ modalMode === 'PAST' ? 'My Past Questions' : 'Common Questions' }}</h2>
-        <button class="btn-icon danger" (click)="closeModal()" style="border: none; background: transparent; font-size: 20px;">✕</button>
+        <button class="btn-icon danger" (click)="closeModal()"
+          style="border: none; background: transparent; font-size: 20px;">✕</button>
       </div>
-      
+
       <div class="modal-search">
-        <input type="text" [(ngModel)]="searchQuery" [ngModelOptions]="{standalone: true}" placeholder="Search exact question texts..." class="input-field">
+        <input type="text" [(ngModel)]="searchQuery" [ngModelOptions]="{standalone: true}"
+          placeholder="Search exact question texts..." class="input-field">
       </div>
 
       <div class="modal-body">
@@ -131,11 +140,13 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>My Past Questions</h2>
-        <button class="btn-icon danger" (click)="closeModal()" style="border: none; background: transparent; font-size: 20px;">✕</button>
+        <button class="btn-icon danger" (click)="closeModal()"
+          style="border: none; background: transparent; font-size: 20px;">✕</button>
       </div>
-      
+
       <div class="modal-search">
-        <input type="text" [(ngModel)]="searchQuery" [ngModelOptions]="{standalone: true}" placeholder="Search exact question texts..." class="input-field">
+        <input type="text" [(ngModel)]="searchQuery" [ngModelOptions]="{standalone: true}"
+          placeholder="Search exact question texts..." class="input-field">
       </div>
 
       <div class="modal-body">

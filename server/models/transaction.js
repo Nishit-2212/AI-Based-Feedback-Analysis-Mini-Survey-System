@@ -222,7 +222,7 @@ Transaction.getAllSurveyTransactionByCompanyId = async (companyId) => {
 Transaction.getAllResponseBySurveyId = async (surveyId) => {
 
     try {
-        
+
         //  const transaction = await commanDb.findDB(Transaction, { surveyId: surveyId }, { userId: 0 }).populate('answers.questionId','questionText questionType');
         const transaction = await commanDb.findDB(Transaction, { surveyId: surveyId }, { userId: 0 });
         await Transaction.populate(transaction, { path: 'answers.questionId', select: 'questionText questionType options' });

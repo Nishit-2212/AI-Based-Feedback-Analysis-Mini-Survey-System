@@ -115,7 +115,7 @@ Company.login = async (data) => {
         const token = generateAccessToken(getCompanyData, Company.modelName);
         const RefreshToken = generateRefreshToken(getCompanyData._id, getCompanyData.role);
 
-        console.log("getCompanyDetail",getCompanyData);
+        console.log("getCompanyDetail", getCompanyData);
 
         return {
             statusCode: 200,

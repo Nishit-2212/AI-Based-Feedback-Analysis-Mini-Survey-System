@@ -197,6 +197,7 @@ const generateNewAccessToken = async (req, res) => {
 
     if (!refreshToken) {
         return res.status(400).json({
+            success: false,
             message: "Refresh Token is not found"
         });
     }
@@ -206,7 +207,10 @@ const generateNewAccessToken = async (req, res) => {
         const user = await getUserFromRefreshToken(refreshToken);
 
         if (!user) {
-            return res.status(400).json({ message: "User not Found" });
+            return res.status(400).json({
+                success: false,
+                message: "User not Found"
+            });
         }
 
         console.log(user);
@@ -305,7 +309,8 @@ const getUserFromRefreshToken = async (refreshToken) => {
             return null;
         }
         return getUser;
-    } catch (Err) {
+    }
+    catch (Err) {
         if (Err && Err.name === "TokenExpiredError") {
             return null;
         }
@@ -315,8 +320,64 @@ const getUserFromRefreshToken = async (refreshToken) => {
 }
 
 
+const getUserFromAccessToken = async (accessToken) => {
+
+    const secretKey = proccess.env.ACCESS_TOKEN_SECRET;
+
+    try {
+
+        const decryptToken = jwt.verify(accessToken, secretKey);
+        console.log("User info from accessToken", decryptToken);
+
+        return decryptToken;
+    }
+    catch (err) {
+
+        console.error('Something went wrong while getting user info from accessToken')
+        return null;
+
+    }
+
+}
 
 
-module.exports = { userSignup, googleLogin, companySignup, userLogin, companyLogin, generateNewAccessToken, logOut };
+
+const getUserInfo = async () => {
+
+    try {
+        const accessToken = req.cookies.accessToken || null;
+
+        if (!accessToken) {
+            return res.status(400).json({
+                status: false,
+                message: "Aceess Token is not found"
+            });
+        }
+
+
+        const user = await getUserFromAccessToken(accessToken);
+
+        console.log('user from accessToken', user);
+
+        return res.status(200).json({
+            success: true,
+            message: 'you succesfully fetch the data from the token',
+            data: user,
+        })
+    }
+    catch (err) {
+        console.log('Error in extracting user from token');
+        return res.status(500).json({
+            success:false,
+            message: 'something went wrong to extract user info from accesstoken'
+            
+        })
+    }
+
+}
+
+
+
+module.exports = { userSignup, googleLogin, companySignup, userLogin, companyLogin, generateNewAccessToken, logOut, getUserInfo };
 
 

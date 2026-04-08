@@ -128,23 +128,40 @@ Survey.createSurvey = async (data, companyId, Question) => {
                 const aiQuestions = await generateQuestions(title, description, allQuestionsData, textAnalyzerKeyword);
                 console.log('AI Questions generated:', aiQuestions);
 
+                // const aiQuestionIds = [];
+                // for (const aiQuestion of aiQuestions) {
+                //     const questionDynamicKey = `dynamic_key_${companyId}_${uuidv4()}`;
+
+                //     const newAiQuestion = new Question({
+                //         questionKey: questionDynamicKey,
+                //         questionText: aiQuestion,
+                //         questionType: aiQuestion.type || 'TEXT',
+                //         surveyId: newSurvey._id,
+                //         companyId: companyId,
+                //         isAiGenerated: true
+                //     });
+
+                //     await newAiQuestion.save();
+                //     aiQuestionIds.push(newAiQuestion._id);
+                //     console.log('AI Question saved with Key:', newAiQuestion.questionKey);
+                // }
+
+                const questionDynamicKey = `dynamic_key_${companyId}_${uuidv4()}`;
+
                 const aiQuestionIds = [];
-                for (const aiQuestion of aiQuestions) {
-                    const questionDynamicKey = `dynamic_key_${companyId}_${uuidv4()}`;
+                const newAiQuestion = new Question({
+                    questionKey: questionDynamicKey,
+                    questionText: aiQuestions,
+                    questionType: 'TEXT',
+                    surveyId: newSurvey._id,
+                    companyId: companyId,
+                    isAiGenerated: true
+                });
 
-                    const newAiQuestion = new Question({
-                        questionKey: questionDynamicKey,
-                        questionText: aiQuestion.text,
-                        questionType: aiQuestion.type || 'TEXT',
-                        surveyId: newSurvey._id,
-                        companyId: companyId,
-                        isAiGenerated: true
-                    });
+                await newAiQuestion.save();
+                aiQuestionIds.push(newAiQuestion._id);
 
-                    await newAiQuestion.save();
-                    aiQuestionIds.push(newAiQuestion._id);
-                    console.log('AI Question saved with Key:', newAiQuestion.questionKey);
-                }
+                console.log('new AI question is generated:-', newAiQuestion)
 
                 await commanDb.findOneAndUpdateDB(Survey, { _id: newSurvey._id }, { $push: { aiGeneratedQuestions: { $each: aiQuestionIds } } }, { new: true });
                 console.log('AI questions linked to survey');
@@ -277,12 +294,12 @@ Survey.getAllCompanySurveys = async (companyId) => {
 
 Survey.getCompanySurveyById = async (companyId, surveyId) => {
     try {
-        const survey = await Survey.findOne({ 
-            companyId: new mongoose.Types.ObjectId(companyId), 
-            _id: new mongoose.Types.ObjectId(surveyId) 
+        const survey = await Survey.findOne({
+            companyId: new mongoose.Types.ObjectId(companyId),
+            _id: new mongoose.Types.ObjectId(surveyId)
         })
-        .populate('questions')
-        .populate('aiGeneratedQuestions');
+            .populate('questions')
+            .populate('aiGeneratedQuestions');
 
         if (!survey) {
             return {
@@ -301,11 +318,11 @@ Survey.getCompanySurveyById = async (companyId, surveyId) => {
         const finalSurveyData = survey.toObject();
 
         let allQuestionsCombined = [];
-        
+
         if (survey.questions) {
             allQuestionsCombined = allQuestionsCombined.concat(survey.questions);
         }
-        
+
         if (survey.aiGeneratedQuestions) {
             allQuestionsCombined = allQuestionsCombined.concat(survey.aiGeneratedQuestions);
         }

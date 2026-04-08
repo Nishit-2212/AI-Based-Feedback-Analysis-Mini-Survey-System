@@ -141,9 +141,9 @@ Question.getAllCommanQuestions = async () => {
     try {
         // :TODO change this static companyId
         // in company Id i will be passing adminCompany id which innovateMR@gmail.com 's ID.
-        const result = await commanDb.findDB(Question, { companyId: '69ce19ceb56451eec39277d0' }) 
+        const result = await commanDb.findDB(Question, { companyId: '69ce19ceb56451eec39277d0' })
 
-        console.log('Result',result)
+        console.log('Result', result)
 
         return {
             statusCode: 200,

@@ -12,9 +12,9 @@ import { UserService } from '../../../services/user.service';
 })
 export class CompanyListComponent implements OnInit {
   companies: any[] = [];
-  
 
-  constructor(private userService: UserService, private router: Router) {}
+
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchCompanies();
