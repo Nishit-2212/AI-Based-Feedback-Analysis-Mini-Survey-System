@@ -10,6 +10,7 @@ import { SurveyLayoutComponent } from './layouts/survey-layout/survey-layout.com
 import { SurveyDisplayComponent } from './features/user/survey-display/survey-display.component';
 import { AnalysisSurveyComponent } from './features/dashboard/analysis-survey/analysis-survey.component';
 import { GivenSurveysComponent } from './features/user/given-surveys/given-surveys.component';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   { 
@@ -27,6 +28,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardLayoutComponent,
+    canMatch: [adminGuard],
     children: [
       { path: '', component: DashboardHomeComponent },
       { path: 'surveys/new', component: CreateSurveyComponent },

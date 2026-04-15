@@ -6,10 +6,10 @@
 
   <div class="user-profile" [ngClass]="{'compact': isCollapsed}">
     <div class="avatar">
-      <img src="https://ui-avatars.com/api/?name=Company+Admin&background=CCFF90&color=000&font-weight=600"
+      <img src="https://ui-avatars.com/api/?name={{ authSignal().username || 'Company+Admin' }}&background=CCFF90&color=000&font-weight=600"
         alt="Avatar">
     </div>
-    <span class="user-name" *ngIf="!isCollapsed">Company Admin</span>
+    <span class="user-name" *ngIf="!isCollapsed">{{ authSignal().username || 'Company Admin' }}</span>
     <i class="dropdown-icon" *ngIf="!isCollapsed">⌄</i>
   </div>
 

@@ -4,8 +4,6 @@
       <a routerLink="/" class="logo">PIXLS</a>
       <ul class="nav-links" *ngIf="authSignal().isLoggedIn">
         <li><a routerLink="/home" class="nav-link active">Home</a></li>
-        <li><a routerLink="/about" class="nav-link">About</a></li>
-        <li><a routerLink="/forum" class="nav-link">Forum</a></li>
         
         <!-- Redirect to User Surveys -->
         <li>
@@ -15,13 +13,6 @@
     </div>
 
     <div class="navbar-center">
-      <div class="search-bar">
-        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="text" placeholder="Try 'Lotus GT 430'" />
-      </div>
     </div>
 
     <div class="navbar-right" style="gap: 12px;" *ngIf="!authSignal().isLoggedIn">
