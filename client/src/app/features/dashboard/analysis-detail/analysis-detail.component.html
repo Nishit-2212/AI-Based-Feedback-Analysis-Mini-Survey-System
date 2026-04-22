@@ -40,8 +40,15 @@
         </div>
 
         <div class="q-options" *ngIf="q.questionType === 'TEXT'">
-           <div class="text-responses-placeholder">
-             <p style="color: #666; font-style: italic; font-size: 13px;">Text response answers will be grouped here.</p>
+           <div class="text-responses-container" *ngIf="textAnswersMap[q._id] && textAnswersMap[q._id].length > 0">
+             <ul>
+               <li *ngFor="let response of textAnswersMap[q._id]" class="text-answer">
+                 "{{ response }}"
+               </li>
+             </ul>
+           </div>
+           <div class="text-responses-placeholder" *ngIf="!textAnswersMap[q._id] || textAnswersMap[q._id].length === 0">
+             <p style="color: #666; font-style: italic; font-size: 13px;">No text responses recorded yet.</p>
            </div>
         </div>
       </div>

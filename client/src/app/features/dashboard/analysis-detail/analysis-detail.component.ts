@@ -18,6 +18,7 @@ export class AnalysisDetailComponent implements OnInit {
   totalResponseOnSelectedSurvey: number = 0;
   Highcharts: typeof Highcharts = Highcharts;
   chartOptionsMap: { [key: string]: Highcharts.Options } = {};
+  textAnswersMap: { [key: string]: string[] } = {};
   isLoading: boolean = true;
 
   constructor(
@@ -121,6 +122,16 @@ export class AnalysisDetailComponent implements OnInit {
             data: seriesData
           }]
         } as any;
+      } else if (q.questionType === 'TEXT') {
+        const textResponses: string[] = [];
+        responses.forEach((session: any) => {
+          const match = session.answers.find((ans: any) => ans.questionKey === q.questionKey);
+          if (match && match.answer && match.answer.length > 0) {
+             // Assuming TEXT questions store answer linearly in array
+             textResponses.push(match.answer[0]);
+          }
+        });
+        this.textAnswersMap[q._id] = textResponses;
       }
     });
   }
