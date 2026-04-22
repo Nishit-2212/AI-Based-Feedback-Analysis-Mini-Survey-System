@@ -1,0 +1,61 @@
+<div class="analysis-container">
+  <!-- Top Navigation & Header -->
+  <div class="nav-header">
+    <button class="btn-back" (click)="goBack()">← Back to Surveys</button>
+  </div>
+
+  <div class="loading-state" *ngIf="isLoading">
+    <p>Loading Survey Analysis...</p>
+  </div>
+
+  <!-- Detail View of Selected Survey -->
+  <div class="survey-details" *ngIf="!isLoading && selectedSurvey">
+    <div class="detail-header">
+      <h2>{{ selectedSurvey.surveyName }}</h2>
+      <span class="badge detail-badge">Total Responses: {{ totalResponseOnSelectedSurvey }}</span>
+    </div>
+    <p class="detail-desc">{{ selectedSurvey.description }}</p>
+
+    <div class="questions-blueprint">
+      <h3>Included Questions ({{ selectedSurvey.questions?.length || 0 }})</h3>
+
+      <div class="question-item" *ngFor="let q of selectedSurvey.questions; let i = index">
+        <div class="q-header">
+          <span class="q-number">Q{{ i + 1 }}</span>
+          <span class="q-type badge">{{ q.questionType }}</span>
+          <span class="q-ai badge ai" *ngIf="q.isAiGenerated">✨ AI Generated</span>
+        </div>
+        <p class="q-text">{{ q.questionText }}</p>
+
+        <!-- Options / Chart Mapping -->
+        <div class="q-options" *ngIf="q.questionType !== 'TEXT' && q.options && q.options.length">
+          <ul>
+            <li *ngFor="let opt of q.options">{{ opt }}</li>
+          </ul>
+          <div class="chart-container" *ngIf="chartOptionsMap[q._id]" style="margin-top: 24px;">
+            <highcharts-chart [options]="chartOptionsMap[q._id]"
+              style="width: 100%; height: 350px; display: block; overflow: hidden;">
+            </highcharts-chart>
+          </div>
+        </div>
+
+        <div class="q-options" *ngIf="q.questionType === 'TEXT'">
+           <div class="text-responses-placeholder">
+             <p style="color: #666; font-style: italic; font-size: 13px;">Text response answers will be grouped here.</p>
+           </div>
+        </div>
+      </div>
+
+      <div *ngIf="!selectedSurvey.questions || selectedSurvey.questions.length === 0" class="empty-q">
+        No questions assigned to this survey architecture.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Placeholder if survey simply wasn't found -->
+  <div class="empty-detail" *ngIf="!isLoading && !selectedSurvey">
+    <p>We couldn't track down this Survey data.</p>
+  </div>
+
+</div>

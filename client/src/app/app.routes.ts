@@ -9,6 +9,7 @@ import { SurveyIntroComponent } from './features/user/survey-intro/survey-intro.
 import { SurveyLayoutComponent } from './layouts/survey-layout/survey-layout.component';
 import { SurveyDisplayComponent } from './features/user/survey-display/survey-display.component';
 import { AnalysisSurveyComponent } from './features/dashboard/analysis-survey/analysis-survey.component';
+import { AnalysisDetailComponent } from './features/dashboard/analysis-detail/analysis-detail.component';
 import { GivenSurveysComponent } from './features/user/given-surveys/given-surveys.component';
 import { adminGuard } from './core/guards/admin.guard';
 
@@ -32,7 +33,8 @@ export const routes: Routes = [
     children: [
       { path: '', component: DashboardHomeComponent },
       { path: 'surveys/new', component: CreateSurveyComponent },
-      { path: 'surveys/analysis', component: AnalysisSurveyComponent }
+      { path: 'surveys/analysis', component: AnalysisSurveyComponent },
+      { path: 'surveys/analysis/:id', component: AnalysisDetailComponent }
     ]
   },
   {

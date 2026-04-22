@@ -22,82 +22,33 @@
     </div>
   </div>
 
-  <!-- Master-Detail Layout -->
-  <div class="master-detail-layout">
+  <!-- Survey Directory Grid -->
+  <div class="survey-grid">
 
-    <!-- Left Column: Survey List -->
-    <div class="list-column">
-      <h2>Survey Directory</h2>
-      <div class="survey-list">
+    <div class="survey-card" *ngFor="let survey of surveys" (click)="selectSurvey(survey)">
+      <div class="card-header">
+        <h4>{{ survey.surveyName }}</h4>
+        <span class="status-badge" [ngClass]="survey.isActive ? 'active' : 'inactive'">
+          {{ survey.isActive ? 'Active' : 'Closed' }}
+        </span>
+      </div>
+      <p class="survey-desc">{{ survey.description }}</p>
+      
+      <div class="card-stats">
+         <div class="metric-pill">
+           <span class="p-icon">👥</span>
+           <strong>{{ survey.totalResponsesCount || 0 }}</strong> Responses
+         </div>
+      </div>
 
-        <div class="survey-card" *ngFor="let survey of surveys"
-          [class.active]="selectedSurvey && selectedSurvey._id === survey._id" (click)="selectSurvey(survey)">
-          <div class="card-header">
-            <h4>{{ survey.surveyName }}</h4>
-            <span class="status-badge" [ngClass]="survey.isActive ? 'active' : 'inactive'">
-              {{ survey.isActive ? 'Active' : 'Closed' }}
-            </span>
-          </div>
-          <p class="survey-desc">{{ survey.description }}</p>
-          <div class="card-footer">
-            <span class="date">Updated: {{ survey.updatedAt | date:'mediumDate' }}</span>
-          </div>
-        </div>
-
-        <div *ngIf="surveys.length === 0" class="empty-state">
-          No surveys tracked yet for this company.
-        </div>
-
+      <div class="card-footer">
+        <span class="date">Updated: {{ survey.updatedAt | date:'mediumDate' }}</span>
       </div>
     </div>
 
-    <!-- Right Column: Detail View -->
-    <div class="detail-column">
-
-      <!-- Placeholder when nothing is selected -->
-      <div class="empty-detail" *ngIf="!selectedSurvey">
-        <div class="icon-placeholder">←</div>
-        <p>Select a survey to get analysis.</p>
-      </div>
-
-      <!-- Detail View of Selected Survey -->
-      <div class="survey-details" *ngIf="selectedSurvey">
-        <div class="detail-header">
-          <h2>{{ selectedSurvey.surveyName }}</h2>
-          <span class="badge detail-badge">Total Responses:- {{totalResponseOnSelectedSurvey}}</span>
-        </div>
-        <p class="detail-desc">{{ selectedSurvey.description }}</p>
-
-        <div class="questions-blueprint">
-          <h3>Included Questions ({{ selectedSurvey.questions?.length || 0 }})</h3>
-
-          <div class="question-item" *ngFor="let q of selectedSurvey.questions; let i = index">
-            <div class="q-header">
-              <span class="q-number">Q{{ i + 1 }}</span>
-              <span class="q-type badge">{{ q.questionType }}</span>
-              <span class="q-ai badge ai" *ngIf="q.isAiGenerated">✨ AI Generated</span>
-            </div>
-            <p class="q-text">{{ q.questionText }}</p>
-
-            <div class="q-options" *ngIf="q.questionType !== 'TEXT' && q.options && q.options.length">
-              <ul>
-                <li *ngFor="let opt of q.options">{{ opt }}</li>
-              </ul>
-              <div class="chart-container" *ngIf="chartOptionsMap[q._id]" style="margin-top: 24px;">
-                <highcharts-chart [options]="chartOptionsMap[q._id]"
-                  style="width: 100%; height: 350px; display: block; overflow: hidden;">
-                </highcharts-chart>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="!selectedSurvey.questions || selectedSurvey.questions.length === 0" class="empty-q">
-            No questions assigned to this survey architecture.
-          </div>
-
-        </div>
-      </div>
-
+    <div *ngIf="surveys.length === 0" class="empty-state">
+      <div class="empty-icon">📊</div>
+      No surveys tracked yet for this company.
     </div>
 
   </div>

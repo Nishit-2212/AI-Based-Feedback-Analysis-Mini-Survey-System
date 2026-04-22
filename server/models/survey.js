@@ -269,8 +269,24 @@ Survey.getSurveyIntro = async (surveyId) => {
 
 Survey.getAllCompanySurveys = async (companyId) => {
     try {
-        const surveys = await commanDb.findDB(Survey, { companyId: companyId }, { password: 0 });
-
+        const surveys = await Survey.aggregate([
+            { $match: { companyId: new mongoose.Types.ObjectId(companyId) } },
+            {
+                $lookup: {
+                    from: "transactions",
+                    localField: "_id",
+                    foreignField: "surveyId",
+                    as: "responses"
+                }
+            },
+            {
+                $addFields: {
+                    totalResponsesCount: { $size: "$responses" }
+                }
+            },
+            { $project: { responses: 0, password: 0 } },
+            { $sort: { updatedAt: -1 } }
+        ]);
 
         return {
             statusCode: 200,

@@ -1,0 +1,134 @@
+.analysis-container {
+  padding: 24px;
+}
+
+.nav-header {
+  margin-bottom: 24px;
+}
+
+.btn-back {
+  background: transparent;
+  border: 1px solid #E5E5EA;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-back:hover {
+  background: #F6F7F9;
+}
+
+.loading-state, .empty-detail {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+  background: #FFF;
+  border-radius: 12px;
+  border: 1px solid #E5E5EA;
+}
+
+.survey-details {
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #E5E5EA;
+  padding: 32px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.detail-header h2 {
+  font-size: 24px;
+  color: #1C1C1E;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.detail-badge {
+  background: #EAF0FF;
+  color: #2D5BFF;
+  border: 1px solid #D1E0FF;
+}
+
+.detail-desc {
+  font-size: 15px;
+  color: #4C4C50;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.questions-blueprint h3 {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: #1C1C1E;
+}
+
+.question-item {
+  border: 1px solid #E5E5EA;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: #FAFAFA;
+}
+
+.q-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.q-number {
+  font-weight: 700;
+  color: #1C1C1E;
+}
+
+.q-type {
+  background: #F0F0F0;
+  color: #444;
+}
+
+.ai {
+  background: #FFF9E6;
+  color: #B28200;
+}
+
+.q-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1C1C1E;
+  margin-bottom: 16px;
+}
+
+.q-options ul {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.q-options li {
+  background: #FFFFFF;
+  border: 1px solid #E5E5EA;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.chart-container {
+  border-top: 1px dashed #E5E5EA;
+  padding-top: 24px;
+}
