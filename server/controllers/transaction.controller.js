@@ -1,5 +1,6 @@
 const Transaction = require('../models/transaction.js');
 const Survey = require('../models/survey.js');
+const { verifyGenuineResponse } = require('../utils/openaiUtil');
 
 
 const submitResponse = async (req, res) => {
@@ -8,12 +9,38 @@ const submitResponse = async (req, res) => {
     try {
 
         const { transactionId } = req.params;
+        console.log('------------------------------------------------------');
         console.log('answeredQuestion', req.body);
+        console.log('------------------------------------------------------');
         console.log('transactionId', transactionId);
         console.log('userData', req.user);
 
         const result = await Transaction.submitResponse(transactionId, req.body);
-        console.log('result', result)
+        console.log('result', result);
+
+        if (result.success) {
+            Transaction.findOne({ transactionId }).then(async (txnPayload) => {
+                if (txnPayload) {
+                    const surveyPayload = await Survey.findById(txnPayload.surveyId).populate('aiGeneratedQuestions');
+                    if (surveyPayload && surveyPayload.aiGeneratedQuestions && surveyPayload.aiGeneratedQuestions.length > 0) {
+                        const aiQuestionObj = surveyPayload.aiGeneratedQuestions[0];
+                        const aiQuestionIdStr = aiQuestionObj._id.toString();
+                        
+                        const userAnswerData = req.body.find(ans => ans.questionId.toString() === aiQuestionIdStr);
+                        
+                        if (userAnswerData && userAnswerData.answer && userAnswerData.answer.length > 0) {
+                            const aiEvaluation = await verifyGenuineResponse(aiQuestionObj.questionText, userAnswerData.answer[0]);
+                            if (aiEvaluation.isBot) {
+                                await Transaction.findOneAndUpdate({ transactionId }, { isTerm: true});
+                                console.log('AI detected a flagged pattern! Marked transaction:', transactionId);
+                            } else {
+                                console.log('AI verified genuine human response securely.');
+                            }
+                        }
+                    }
+                }
+            }).catch(e => console.error("Background AI processing error:", e));
+        }
 
         return res.status(result.statusCode).json({
             success: result.success,
