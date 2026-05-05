@@ -64,7 +64,15 @@ const verifyGenuineResponse = async (questionText, userAnswer) => {
         });
 
         const replyString = response.choices[0].message.content.trim();
-        const parsedReply = JSON.parse(replyString);
+        
+        // Strip out any markdown formatting (```json ... ```) OpenAI might return
+        const cleanString = replyString.replace(/```json/g, '').replace(/```/g, '').trim();
+        
+        console.log('response',JSON.stringify(response));
+        const parsedReply = JSON.parse(cleanString);
+        console.log('parsedReply',parsedReply);
+        console.log('isBot',parsedReply.isBot);
+        
         return { isBot: parsedReply.isBot };
         
     } catch (error) {
